@@ -13,6 +13,6 @@
     firebase: Application.ref
   });
 
-  Application.ApplicationSerializer = DS.FirebaseSerializer.extend();
+  // Application.ApplicationSerializer = DS.FirebaseSerializer.extend();
 
 })();

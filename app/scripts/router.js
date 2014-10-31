@@ -27,13 +27,13 @@
     });
   });
 
-  Application.ApplicationRoute = Ember.Route.extend({
-    actions: {
-      goBack: function() {
-        window.history.back();
-      }
-    }
-  });
+  // Application.ApplicationRoute = Ember.Route.extend({
+  //   actions: {
+  //     goBack: function() {
+  //       window.history.back();
+  //     }
+  //   }
+  // });
 
   Application.IndexRoute = Ember.Route.extend({
 
@@ -65,7 +65,7 @@
 
       this.render('profile/dates', {
         into: 'profile',
-        outlet: 'profile/dates',
+        outlet: 'dates',
       });
 
     }
