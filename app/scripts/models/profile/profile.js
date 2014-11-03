@@ -1,25 +1,22 @@
-/*globals Application, DS */
+/* globals Application, Ember */
 
-(function () {
+(function() {
   'use strict';
 
-  Application.User = DS.Model.extend({
+  Application.ProfileIndexController = Ember.ArrayController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
 
-  birthday: DS.attr('date'),
-  anniversary: DS.attr('date'),
+    actions: {
 
-  beltsize: DS.attr('string'),
-  hatsize: DS.attr('string'),
-  pantsize: DS.attr('string'),
-  ringsize: DS.attr('string'),
-  shirtsize: DS.attr('string'),
-  shoesize: DS.attr('string'),
-
-  interest: DS.attr('string'),
-
-  aversion: DS.attr('string')
+      updateProfile: function() {
+        var user = this.currentUser;
+        var props = this.getProperties('hatSize', 'pantSize', 'shirtSize', 'shoeSize'); // => {hatSize: 'blah', shoeSize: 'blah'}
+        user.setProperties(props).then(user.save());
+       },
+     }
 
 
-});
+  });
 
 })();

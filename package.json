@@ -29,5 +29,10 @@
     "rimraf": "^2.2.8",
     "streamqueue": "^0.1.1",
     "wiredep": "^1.4.3"
+  },
+  "dependencies": {
+    "connect-livereload": "^0.5.0",
+    "gulp-jshint": "^1.9.0",
+    "jshint-stylish": "^1.0.0"
   }
 }

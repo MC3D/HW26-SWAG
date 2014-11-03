@@ -4,7 +4,8 @@
   'use strict';
   Application.LoginController = Ember.ArrayController.extend({
     needs: ['application'],
-    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+    // currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
     actions: {
       logIn: function() {
         var that = this;
@@ -14,11 +15,10 @@
         }, function(error, authData) {
           if (error === null) {
             that.store.find('user', authData.uid).then(function(user) {
-              localStorage.setItem('userData', JSON.stringify(user));
-              that.set('currentUser', JSON.parse(localStorage.getItem('userData')));
-              that.set('currentUser.userRef', authData.uid);
+              localStorage.setItem('currentUser', JSON.stringify(user));
+              // localStorage.setItem('currentUser', JSON.parse(localStorage.getItem('userData')));
+              localStorage.setItem('currentUser.userRef', authData.uid);
             });
-            // self.push('currentUser', authData.uid);
             that.transitionToRoute('swag');
             console.log('User ID: ' + authData.uid + ', Provider: ' + authData.provider);
           } else {

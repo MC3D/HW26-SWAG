@@ -7,13 +7,10 @@
     currentUser: '',
     init: function() {
       this._super();
-      var self = this;
+      var that = this;
       if(localStorage.getItem('userData')) {
-        self.set('currentUser', JSON.parse(localStorage.getItem('userData')));
+        that.set('currentUser', JSON.parse(localStorage.getItem('userData')));
       }
     }
 });
-
-
-
 })();

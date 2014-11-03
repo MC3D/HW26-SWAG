@@ -12,7 +12,4 @@
   Application.ApplicationAdapter = DS.FirebaseAdapter.extend({
     firebase: Application.ref
   });
-
-  // Application.ApplicationSerializer = DS.FirebaseSerializer.extend();
-
 })();
