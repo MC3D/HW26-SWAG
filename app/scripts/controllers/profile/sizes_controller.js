@@ -15,7 +15,6 @@
           var props = that.getProperties('hatSize', 'pantSize', 'shirtSize', 'shoeSize');
           user.setProperties(props);
           user.save();
-          // user.save(props);
         });
       }
     }

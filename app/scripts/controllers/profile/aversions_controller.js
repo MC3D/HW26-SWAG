@@ -3,16 +3,20 @@
 (function() {
   'use strict';
 
-  Application.ProfileSizesController = Ember.ArrayController.extend({
+  Application.ProfileAversionsController = Ember.ArrayController.extend({
     needs: ['application'],
-    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+    // currentUser: Ember.computed.alias('controllers.application.currentUser'),
     actions: {
 
       updateProfile: function() {
-        var user = this.currentUser;
-        var props = this.getProperties('aversion');
-        user.setProperties(props).then(user.save());
-       },
+          var that = this;
+          var id = localStorage.getItem('currentUser.userRef');
+          this.store.find('user', id).then(function(user) {
+            var props = that.getProperties('aversions');
+            user.setProperties(props);
+            user.save();
+          });
+        }
      }
   });
 })();

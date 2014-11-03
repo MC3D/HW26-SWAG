@@ -26,8 +26,8 @@
                   email: email
                 });
                 user.save().then(function() {
-                  localStorage.setItem('userData', JSON.stringify(user));
-                  localStorage.setItem('currentUser', JSON.parse(localStorage.getItem('userData')));
+                  localStorage.setItem('currentUser', JSON.stringify(user));
+                  // localStorage.setItem('currentUser', JSON.parse(localStorage.getItem('userData')));
                   localStorage.setItem('currentUser.userRef', authData.uid);
                 });
                 console.log('User created successfully');
