@@ -4,7 +4,7 @@
   'use strict';
   Application.LoginController = Ember.ArrayController.extend({
     needs: ['application'],
-    // currentUser: Ember.computed.alias('controllers.application.currentUser'),
+    
 
     actions: {
       logIn: function() {

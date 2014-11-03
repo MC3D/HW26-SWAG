@@ -27,14 +27,6 @@
     });
   });
 
-  // Application.ApplicationRoute = Ember.Route.extend({
-  //   actions: {
-  //     goBack: function() {
-  //       window.history.back();
-  //     }
-  //   }
-  // });
-
   Application.IndexRoute = Ember.Route.extend({
 
     renderTemplate: function() {
@@ -55,10 +47,6 @@
   });
 
   Application.ProfileRoute = Ember.Route.extend({
-    //
-    // model: function(){
-    //   return this.controllerFor('application').get('currentUser');
-    // },
 
     renderTemplate: function() {
       this.render('profile');
@@ -70,6 +58,14 @@
 
     }
   });
+
+  Application.ProfileDatesRoute = Ember.Route.extend({
+    model: function() {
+      var id = localStorage.getItem('currentUser.userRef');
+      this.store.find('user', id);
+    }
+  });
+
 
 
 })();

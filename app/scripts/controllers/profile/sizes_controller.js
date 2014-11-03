@@ -5,7 +5,7 @@
 
   Application.ProfileSizesController = Ember.ArrayController.extend({
     needs: ['application'],
-    // currentUser: Ember.computed.alias('controllers.application.currentUser.userRef'),
+    
     actions: {
 
       updateProfile: function() {
