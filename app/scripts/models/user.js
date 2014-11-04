@@ -17,10 +17,18 @@
     shirtSize: DS.attr('string'),
     shoeSize: DS.attr('string'),
 
-    interests: DS.attr('string'),
+    interests: DS.hasMany('interest', {embedded: true}),
 
-    aversions: DS.attr('string')
+    aversions: DS.hasMany('aversion', {embedded: true})
 
+  });
+
+  Application.Interest = DS.Model.extend({
+    interestText: DS.attr('string')
+  });
+
+  Application.Aversion = DS.Model.extend({
+    aversionText: DS.attr('string')
   });
 
 })();

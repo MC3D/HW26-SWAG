@@ -4,8 +4,8 @@
   'use strict';
 
   Application.IndexController = Ember.Controller.extend({
-    needs: ['application'],
-    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+    // needs: ['application'],
+    // currentUser: Ember.computed.alias('controllers.application.currentUser'),
 
 
   });

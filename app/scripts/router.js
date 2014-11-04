@@ -59,12 +59,23 @@
     }
   });
 
-  Application.ProfileDatesRoute = Ember.Route.extend({
-    model: function() {
-      var id = localStorage.getItem('currentUser.userRef');
-      this.store.find('user', id);
-    }
+  Application.ProfileAversionsRoute = Ember.Route.extend({
+
   });
+
+  Application.ProfileDatesRoute = Ember.Route.extend({
+
+  });
+
+  Application.ProfileInterestsRoute = Ember.Route.extend({
+
+  });
+
+  Application.ProfileSizesRoute = Ember.Route.extend({
+
+  });
+
+
 
 
 

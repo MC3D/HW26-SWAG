@@ -5,18 +5,20 @@
 
   Application.ProfileAversionsController = Ember.ArrayController.extend({
     needs: ['application'],
-    
+
     actions: {
 
       updateProfile: function() {
-          var that = this;
-          var id = localStorage.getItem('currentUser.userRef');
-          this.store.find('user', id).then(function(user) {
-            var props = that.getProperties('aversions');
-            user.setProperties(props);
-            user.save();
-          });
-        }
-     }
+        var id = localStorage.getItem('currentUser.userRef');
+        var user = this.store.find('user', id);
+        var aversion = this.store.createRecord('aversion', {
+          aversionText: this.get('aversion')
+        });
+        
+        console.log(user);
+        user.get('aversions').addObject(aversion);
+        user.save();
+      }
+    }
   });
 })();
