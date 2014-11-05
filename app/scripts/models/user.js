@@ -28,7 +28,7 @@
   });
 
   Application.Interest = DS.Model.extend({
-    interest: DS.attr('string')
+    interestText: DS.attr('string')
   });
 
   Application.Aversion = DS.Model.extend({

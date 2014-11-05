@@ -17,8 +17,6 @@
         this.get('currentUser').get('aversions').addObject(aversion);
         this.get('currentUser').save();
       },
-
-
     }
   });
 

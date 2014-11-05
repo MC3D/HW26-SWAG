@@ -14,10 +14,8 @@
            interestText: this.get('interestText')
          });
          console.log(interest);
-
         this.get('currentUser').get('interests').addObject(interest);
         this.get('currentUser').save();
-        console.log(this.get('currentUser'));
       },
     }
   });
