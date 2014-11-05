@@ -8,6 +8,8 @@
     username: DS.attr('string'),
     email: DS.attr('string'),
 
+    imgURL: DS.attr('string'),
+
     birthday: DS.attr('string'),
     anniversary: DS.attr('string'),
 

@@ -3,19 +3,19 @@
 (function() {
   'use strict';
 
-  Application.ProfileSizesController = Ember.ArrayController.extend({
+  Application.ProfileSizesController = Ember.Controller.extend({
     needs: ['application'],
-    
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+
     actions: {
 
       updateProfile: function() {
-        var that = this;
-        var id = localStorage.getItem('currentUser.userRef');
-        this.store.find('user', id).then(function(user) {
-          var props = that.getProperties('hatSize', 'pantSize', 'shirtSize', 'shoeSize');
-          user.setProperties(props);
-          user.save();
-        });
+        // var that = this;
+        // var props = that.getProperties('hatSize', 'pantSize', 'shirtSize', 'shoeSize');
+        // this.model.setProperties(props);
+        // this.model.save();
+        this.get('currentUser').save();
       }
     }
   });

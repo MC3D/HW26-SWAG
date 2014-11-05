@@ -14,7 +14,7 @@
         Application.ref.createUser(credentials, function(error) {
           if (! error) {
             that.get('controllers.session').authUser(credentials).then(function(user) {
-              console.log('here');
+              console.log('here it is');
               user.setProperties({
                 username: that.get('username'),
                 email: that.get('email')

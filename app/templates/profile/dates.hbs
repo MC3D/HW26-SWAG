@@ -1,5 +1,7 @@
-{{input type='date' class='create-user-input birthday' value=birthday placeholder='birthday' focus-out='updateProfile'}}
-{{input type='date' class='create-user-input anniversary' value=anniversary placeholder='anniversary' focus-out='updateProfile'}}
+{{input type='date' class='create-user-input birthday' value=currentUser.birthday placeholder='birthday'}}
+{{input type='date' class='create-user-input anniversary' value=currentUser.anniversary placeholder='anniversary'}}
+
+<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
 
 {{link-to 'Interests' 'profile.interests'}}
 {{link-to 'swag' 'swag'}}

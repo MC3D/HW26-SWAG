@@ -13,6 +13,7 @@
       path: '/profile'
     }, function() {
       this.route('aversions');
+      this.route('avatar');
       this.route('dates');
       this.route('interests');
       this.route('sizes');
@@ -59,21 +60,9 @@
     }
   });
 
-  Application.ProfileAversionsRoute = Ember.Route.extend({
 
-  });
 
-  Application.ProfileDatesRoute = Ember.Route.extend({
 
-  });
-
-  Application.ProfileInterestsRoute = Ember.Route.extend({
-
-  });
-
-  Application.ProfileSizesRoute = Ember.Route.extend({
-
-  });
 
 
 

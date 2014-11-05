@@ -1,4 +1,4 @@
-/* globals Ember, Application, DS, Firebase */
+/* globals Ember, Application, DS, Firebase, filepicker */
 
 (function() {
   'use strict';
@@ -13,7 +13,7 @@
     firebase: Application.ref
   });
 
-  // filepicker.setKey('AZCePNZlYTB2qdKHk2cOiz');
+  filepicker.setKey('AZCePNZlYTB2qdKHk2cOiz');
 
   Ember.Application.initializer({
     name: 'firebase-session',
@@ -28,7 +28,7 @@
         }).catch(function(error){
           console.error(error);
         }).then(function(){
-          console.log("success");
+          console.log('success');
         });
 
       }

@@ -1,4 +1,6 @@
-{{input type='string' class='create-user-input' value=aversion placeholder='aversion' focus-out='updateProfile'}}
+{{input type='string' class='create-user-input' value=currentUser.aversions.aversion placeholder='aversion'}}
+
+<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
 
 {{link-to 'interests' 'profile.interests'}}
 {{link-to 'sizes' 'profile.sizes'}}
