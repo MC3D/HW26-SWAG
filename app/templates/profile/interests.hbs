@@ -1,6 +1,11 @@
-{{input type='string' class='create-user-input' value=currentUser.interest placeholder='interest'}}
+{{input type='string' class='create-user-input' value=interestText placeholder='interest'}}
 
-<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
+<button class='btn btn-info'{{action 'addInterest'}}>Add</button>
+{{#each currentUser.interests itemController='interest'}}
+  <li>{{interestText}}
+    <button class='btn btn-danger'{{action 'removeInterest'}}>X</button>
+  </li>
+{{/each}}
 
 {{link-to 'Dates' 'profile.dates'}}
 {{link-to 'Aversions' 'profile.aversions'}}

@@ -60,8 +60,21 @@
     }
   });
 
+  Application.ProfileAversionsRoute = Ember.Route.extend({
 
+    model: function(){
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
 
+  Application.ProfileInterestsRoute = Ember.Route.extend({
+
+    model: function(){
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
 
 
 

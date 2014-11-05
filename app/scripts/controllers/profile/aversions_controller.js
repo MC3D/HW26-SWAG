@@ -9,39 +9,38 @@
 
     actions: {
 
-      updateProfile: function() {
+      addAversion: function() {
+        var aversion = this.store.createRecord('aversion', {
+           aversionText: this.get('aversionText')
+         });
+
+        this.get('currentUser').get('aversions').addObject(aversion);
         this.get('currentUser').save();
-        // var that = this;
-        // var props = that.getProperties('aversionText');
-        // this.mdoel.setProperties(props);
-        // this.model.save();
-
-        // var id = this.controllerFor('application').get('currentUser').id;
-        // var user = this.store.find('user', id);
-        // var aversion = this.store.createRecord('aversion', {
-        //   averstionText: this.get('aversion')
-        // });
-        // user.get('aversions').addObject(aversion);
-        // user.save();
+      },
 
 
-        // var that = this;
-        // var props = that.getProperties('hatSize', 'pantSize', 'shirtSize', 'shoeSize');
-        // console.log(this.model);
-        // this.model.setProperties(props);
-        // this.model.save();
+    }
+  });
 
 
+  Application.AversionController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
 
-        // var id = localStorage.getItem('currentUser.userRef');
-        // var user = this.store.find('user', id);
-        // var aversion = this.store.createRecord('aversion', {
-        //   aversionText: this.get('aversion')
-        // });
+    actions: {
+      removeAversion: function(){
+
+      var user = this.get('currentUser');
+      user.get('aversions').removeObject(this.get('model'));
+      user.save();
+
+        // this.get('model').destroyRecord();
+        // console.log(this.get('currentUser'));
         //
-        // console.log(user);
-        // user.get('aversions').addObject(aversion);
-        // user.save();
+        // this.get('curentUser').save().catch(function(error){
+        //   console.log(error);
+        // });
+
       }
     }
   });

@@ -1,0 +1,10 @@
+<h1>Avatar Upload</h1>
+
+{{#if currentUser.imgURL}}
+  <img class='avatar' {{bind-attr src=currentUser.imgURL}} />
+  <button {{action 'addAvatar'}}><i></i>Change Photo</button>
+{{else}}
+  <button {{action 'addAvatar'}}><i></i>Add Photo</button>
+{{/if}}
+
+<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>

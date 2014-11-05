@@ -9,15 +9,31 @@
 
     actions: {
 
-      updateProfile: function() {
-        
-        //  var that = this;
-        //  var id = localStorage.getItem('currentUser.userRef');
-        //  this.store.find('user', id).then(function(user) {
-        //    var props = that.getProperties('interests');
-        //    user.setProperties(props);
-        //    user.save();
-        //  });
+      addInterest: function() {
+        var interest = this.store.createRecord('interest', {
+           interestText: this.get('interestText')
+         });
+         console.log(interest);
+
+        this.get('currentUser').get('interests').addObject(interest);
+        this.get('currentUser').save();
+        console.log(this.get('currentUser'));
+      },
+    }
+  });
+
+
+  Application.InterestController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      removeInterest: function(){
+
+      var user = this.get('currentUser');
+      user.get('interests').removeObject(this.get('model'));
+      user.save();
+
       }
     }
   });

@@ -21,12 +21,14 @@
 
     interests: DS.hasMany('interest', {embedded: true}),
 
-    aversions: DS.hasMany('aversion', {embedded: true})
+    aversions: DS.hasMany('aversion', {embedded: true}),
+
+    swagbag: DS.hasMany('swag')
 
   });
 
   Application.Interest = DS.Model.extend({
-    interestText: DS.attr('string')
+    interest: DS.attr('string')
   });
 
   Application.Aversion = DS.Model.extend({
