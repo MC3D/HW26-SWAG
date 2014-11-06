@@ -1,1 +1,12 @@
 <h2>My Sweet Swag!</h2>
+
+
+<img class='imgSwag'{{bind-attr src=swagURL}}/>
+  <button {{action 'addImage'}}><i></i>Upload Image</button>
+
+{{input type='text' class='swag-input' value=description placeholder='Item Description'}}
+{{input type='text' class='swag-input' value=retailer placeholder='Store'}}
+{{input type='text' class='swag-input' value=location placeholder='Store Location'}}
+{{input type='text' class='swag-input' value=price placeholder='Price'}}
+
+<button class='btn btn-success'{{action 'saveSwag'}}>SAVE ITEM</button>

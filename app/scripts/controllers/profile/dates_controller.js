@@ -8,12 +8,9 @@
     currentUser: Ember.computed.alias('controllers.application.currentUser'),
 
     actions: {
-
       updateProfile: function() {
         this.get('currentUser').save();
       }
-
-
     }
   });
 })();
