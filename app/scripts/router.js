@@ -9,6 +9,10 @@
       path: '/'
     });
 
+    this.route('search', {
+      path: '/searchpeople'
+    });
+
     this.resource('profile', {
       path: '/profile'
     }, function() {
@@ -23,9 +27,14 @@
       path: '/myswag'
     });
 
+    this.route('swagroom', {
+      path: '/swagroom'
+    });
+
     this.route('welcome', {
       path: '/welcome'
     });
+
   });
 
   Application.IndexRoute = Ember.Route.extend({
@@ -76,9 +85,11 @@
     }
   });
 
+  Application.SearchRoute = Ember.Route.extend({
 
+    model: function(){
+      return this.store.find('user');
+    }
 
-
-
-
+  });
 })();

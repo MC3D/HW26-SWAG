@@ -23,7 +23,10 @@
 
     aversions: DS.hasMany('aversion', {embedded: true}),
 
-    swagbag: DS.hasMany('swag', {async: true})
+    swagbag: DS.hasMany('swag', {async: true}),
+
+    // following: DS.hasMany('follows', {inverse:'followedBy'},{async: true}),
+    // followedBy: DS.hasMany('followers', {async: true})
 
   });
 

@@ -10,3 +10,12 @@
 {{input type='text' class='swag-input' value=price placeholder='Price'}}
 
 <button class='btn btn-success'{{action 'saveSwag'}}>SAVE ITEM</button>
+
+{{#each currentUser.swagbag itemController='item'}}
+  <li><img class='imgSwag' {{bind-attr src=swagURL}} /></li>
+  <li>{{description}}</li>
+  <li>{{retailer}}</li>
+  <li>{{location}}</li>
+  <li>{{price}}</li>
+  <button class='btn btn-danger'{{action 'removeSwag'}}>X</button>
+{{/each}}
