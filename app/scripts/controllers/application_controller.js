@@ -9,15 +9,10 @@
 
     actions: {
       logOut: function() {
-        this.transitionToRoute('index');
-        //Application.reset();
-        //console.log(localStorage.removeItem('currentUser'));
-
-
-
-        window.localStorage.clear();
-        location.reload();
-
+        localStorage.removeItem('firebasetoken');
+        Application.reset();
+        var dataRef = Application.ref;
+        dataRef.unauth();
       },
 
       goToSwag: function() {

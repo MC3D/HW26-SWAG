@@ -1,0 +1,16 @@
+<form class='friends'>
+  <button {{action 'findFriends'}}><i></i>Find Friends</button>
+
+  <h2>My Friends</h2>
+
+  {{#each model itemController='SwagroomItem'}}
+      <ul>
+        <li>
+          <p>{{username}}</p>
+          <img class='imgAvatar' {{bind-attr src=imgURL}} />
+          {{link-to 'View Swag' 'swagroom.show' this class='btn'}}
+          <button class='btn btn-warning'{{action 'removeFriend'}}>Remove Friend</button>
+        </li>
+      </ul>
+  {{/each}}
+</form>

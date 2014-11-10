@@ -1,0 +1,16 @@
+<form class='swagbag'>
+  <h2>Current Swag Bag</h2>
+
+  <div class='item'>
+    {{#each this.swagbag}}
+      <img class='imgswag' {{bind-attr src=swagURL}} />
+      <ul>
+        <li class='data'>{{description}}</li>
+        <li class='data'>{{retailer}}</li>
+        <li class='data'>{{location}}</li>
+        <li class='data'>{{price}}</li>
+      </ul>
+    {{/each}}
+  </div>
+
+</form>
