@@ -1,2 +1,1284 @@
-!function(){"use strict";window.Application=Ember.Application.create({LOG_TRANSITIONS:!0}),Application.ref=new Firebase("https://myswag.firebaseio.com/"),Application.ApplicationAdapter=DS.FirebaseAdapter.extend({firebase:Application.ref}),filepicker.setKey("AZCePNZlYTB2qdKHk2cOiz"),Ember.Application.initializer({name:"firebase-session",initialize:function(e,t){var s=localStorage.getItem("firebasetoken");if(s){t.deferReadiness();var a=e.lookup("controller:session");a.authWithToken(s).finally(function(){t.advanceReadiness()}).catch(function(e){console.error(e)}).then(function(){console.log("success")})}}})}(),function(){"use strict";Application.VerifyUser=Ember.Mixin.create({beforeModel:function(){var e=this.controllerFor("session").get("currentUser");e||this.transitionTo("index")}})}(),function(){"use strict";Application.Router.map(function(){this.route("index",{path:"/"}),this.route("search",{path:"/searchpeople"}),this.resource("profile",{path:"/profile"},function(){this.route("aversions"),this.route("avatar"),this.route("dates"),this.route("interests"),this.route("sizes")}),this.route("swag",{path:"/myswag"}),this.resource("friends",{path:"/friends"},function(){this.route("show",{path:":user_id"})}),this.route("welcome",{path:"/welcome"})}),Application.FriendsIndexRoute=Ember.Route.extend(Application.VerifyUser,{model:function(){var e=this.controllerFor("application").get("currentUser");return e.get("friends")}}),Application.FriendsShowRoute=Ember.Route.extend(Application.VerifyUser,{}),Application.IndexRoute=Ember.Route.extend({renderTemplate:function(){this.render("index"),this.render("login",{into:"index",outlet:"login",controller:"login"}),this.render("signup",{into:"index",outlet:"signup",controller:"signup"})}}),Application.ProfileRoute=Ember.Route.extend(Application.VerifyUser,{}),Application.ProfileAvatarRoute=Ember.Route.extend(Application.VerifyUser,{}),Application.ProfileAversionsRoute=Ember.Route.extend(Application.VerifyUser,{model:function(){var e=this.controllerFor("application").get("currentUser").id;return this.store.find("user",e)}}),Application.ProfileDatesRoute=Ember.Route.extend(Application.VerifyUser,{}),Application.ProfileInterestsRoute=Ember.Route.extend(Application.VerifyUser,{model:function(){var e=this.controllerFor("application").get("currentUser").id;return this.store.find("user",e)}}),Application.ProfileSizesRoute=Ember.Route.extend(Application.VerifyUser,{}),Application.SearchRoute=Ember.Route.extend(Application.VerifyUser,{model:function(){var e=this.controllerFor("application").get("currentUser");return Ember.RSVP.hash({friends:e.get("friends.content.content"),users:this.store.find("user")}).then(function(t){var s=t.friends,a=t.users;return a.removeObject(e),a.removeObjects(s),a})}}),Application.SwagRoute=Ember.Route.extend(Application.VerifyUser,{})}(),function(){"use strict";Application.ProfileDatesView=Ember.View.extend({didInsertElement:function(){this.$(".birthday").pickadate(),this.$(".anniversary").pickadate()}})}(),function(){"use strict";Application.ApplicationController=Ember.Controller.extend({needs:["session"],currentUser:Ember.computed.alias("controllers.session.currentUser"),actions:{logOut:function(){localStorage.removeItem("firebasetoken"),Application.reset();var e=Application.ref;e.unauth()},goToSwag:function(){this.transitionToRoute("swag")},goToFriends:function(){this.transitionToRoute("friends")},goToProfile:function(){this.transitionToRoute("profile.avatar")}}})}(),function(){"use strict";Application.IndexController=Ember.Controller.extend({})}(),function(){"use strict";Application.LoginController=Ember.Controller.extend({needs:["session"],actions:{logIn:function(){var e=this,t=this.getProperties("email","password");this.get("controllers.session").authUser(t).then(function(){console.log("there"),e.transitionToRoute("swag")})}}})}(),function(){"use strict";Application.SearchController=Ember.ArrayController.extend({sortProperties:["username"],sortAscending:!0}),Application.SearchItemController=Ember.ObjectController.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{addFriend:function(){var e=this.get("model");this.get("currentUser").get("friends").addObject(e),this.get("currentUser").save(),e.get("friends").addObject(this.get("currentUser")),e.save()}}})}(),function(){"use strict";Application.SessionController=Ember.Controller.extend({needs:["application"],currentUser:null,authUser:function(e){var t=this;return new Ember.RSVP.Promise(function(s,a){Application.ref.authWithPassword(e,function(e,n){null===e?t.setStorage(n).then(s,a):console.log("error in Session Controller authUser")})})},setStorage:function(e){var t=this;return new Ember.RSVP.Promise(function(s,a){localStorage.setItem("firebasetoken",e.token),console.log("About to find user",e.uid),t.store.find("user",e.uid).then(function(e){console.log("User:",e),t.set("currentUser",e),s(e)},function(n){console.error("Not found",n);var r=t.store.recordForId("user",e.uid);r?(r.loadedData(),t.set("currentUser",r),s(r)):a()})})},authWithToken:function(e){var t=this;return new Ember.RSVP.Promise(function(s,a){Application.ref.authWithCustomToken(e,function(e,n){null===e?(t.setStorage(n).then(s,a),console.log("Login Succeeded!",n)):(a(e),console.log("Login Failed!",e),console.log("Error authenticating user:",e))})})}})}(),function(){"use strict";Application.SignupController=Ember.ArrayController.extend({needs:["session"],actions:{signUp:function(){var e=this,t=this.getProperties("email","password");Application.ref.createUser(t,function(s){s?console.log("Error creating user:",s):e.get("controllers.session").authUser(t).then(function(t){console.log("here it is"),t.setProperties({username:e.get("username"),email:e.get("email")}),t.save().then(function(){console.log("User created successfully"),e.transitionToRoute("profile.avatar")})})})}}})}(),function(){"use strict";Application.SwagController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{addImage:function(){var e=this;filepicker.pickAndStore({},{},function(t){e.set("swagURL",t[0].url)})},saveSwag:function(){var e=this.store.createRecord("swag",{swagURL:this.get("swagURL"),description:this.get("description"),retailer:this.get("retailer"),location:this.get("location"),price:this.get("price")});e.save(),this.get("currentUser.swagbag").addObject(e),this.get("currentUser").save()}}}),Application.SwagItemController=Ember.ObjectController.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{removeSwag:function(){var e=this.get("currentUser");e.get("swagbag").removeObject(this.get("swag")),e.save(),this.get("model").destroyRecord()}}})}(),function(){"use strict";Application.WelcomeController=Ember.ArrayController.extend({actions:{welcome:function(){var e=this;e.transitionToRoute("profile.dates")}}})}(),function(){"use strict";Application.ProfileAversionsController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{addAversion:function(){var e=this.store.createRecord("aversion",{aversionText:this.get("aversionText")});this.get("currentUser").get("aversions").addObject(e),this.get("currentUser").save()}}}),Application.AversionController=Ember.ObjectController.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{removeAversion:function(){var e=this.get("currentUser");e.get("aversions").removeObject(this.get("model")),e.save()}}})}(),function(){"use strict";Application.ProfileAvatarController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{addAvatar:function(){var e=this;filepicker.pickAndStore({},{},function(t){e.set("currentUser.imgURL",t[0].url)})},updateProfile:function(){this.get("currentUser").save(),window.alert("Profile Picture Saved")}}})}(),function(){"use strict";Application.ProfileDatesController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{updateProfile:function(){this.get("currentUser").save(),window.alert("Dates Saved")}}})}(),function(){"use strict";Application.ProfileInterestsController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{addInterest:function(){var e=this.store.createRecord("interest",{interestText:this.get("interestText")});console.log(e),this.get("currentUser").get("interests").addObject(e),this.get("currentUser").save()}}}),Application.InterestController=Ember.ObjectController.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{removeInterest:function(){var e=this.get("currentUser");e.get("interests").removeObject(this.get("model")),e.save()}}})}(),function(){"use strict";Application.ProfileIndexController=Ember.ArrayController.extend({needs:["application"],actions:{}})}(),function(){"use strict";Application.ProfileSizesController=Ember.Controller.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{updateProfile:function(){this.get("currentUser").save(),window.alert("Sizes Saved")}}})}(),function(){"use strict";Application.FriendsIndexController=Ember.ArrayController.extend({sortProperties:["username"],sortAscending:!0,actions:{findFriends:function(){this.transitionToRoute("search")}}}),Application.FriendsItemController=Ember.ObjectController.extend({needs:["application"],currentUser:Ember.computed.alias("controllers.application.currentUser"),actions:{removeFriend:function(){var e=this.get("model");this.get("currentUser").get("friends").removeObject(e),this.get("currentUser").save(),e.get("friends").removeObject(this.get("currentUser")),e.save()}}})}(),function(){"use strict";Application.Aversion=DS.Model.extend({aversionText:DS.attr("string")})}(),function(){"use strict";Application.Interest=DS.Model.extend({interestText:DS.attr("string")})}(),function(){"use strict";Application.User=DS.Model.extend({username:DS.attr("string"),email:DS.attr("string"),imgURL:DS.attr("string"),birthday:DS.attr("string"),anniversary:DS.attr("string"),beltSize:DS.attr("string"),hatSize:DS.attr("string"),pantSize:DS.attr("string"),shirtSize:DS.attr("string"),shoeSize:DS.attr("string"),interests:DS.hasMany("interest",{embedded:!0}),aversions:DS.hasMany("aversion",{embedded:!0}),swagbag:DS.hasMany("swag",{async:!0}),friends:DS.hasMany("user",{async:!0})})}(),function(){"use strict";Application.Swag=DS.Model.extend({swagURL:DS.attr("string"),description:DS.attr("string"),retailer:DS.attr("string"),location:DS.attr("string"),price:DS.attr("string")})}(),Ember.TEMPLATES.application=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i="",o=this.escapeExpression;return n.buffer.push("<div class='header'>\n  <a href=# class=\"octicon octicon-gist-secret\" "),n.buffer.push(o(s.action.call(t,"goToSwag",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n    <span class='navigation'>MY SWAG</span>\n  </a>\n\n  <a href=# class=\"octicon octicon-organization\" "),n.buffer.push(o(s.action.call(t,"goToFriends",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n    <span class='navigation'>FRIENDS</span>\n  </a>\n\n  <a href=# class='octicon octicon-gear' "),n.buffer.push(o(s.action.call(t,"goToProfile",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n    <span class='navigation'>SETTINGS</span>\n  </a>\n\n  <a href=# class=\"octicon octicon-sign-out\" "),n.buffer.push(o(s.action.call(t,"logOut",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n    <span class='navigation'>SIGN OUT</span>\n  </a>\n</div>\n\n<div>\n    "),r=s._triageMustache.call(t,"outlet",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(r||0===r)&&n.buffer.push(r),n.buffer.push("\n</div>\n"),i}),Ember.TEMPLATES.index=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o="",l=s.helperMissing,h=this.escapeExpression;return n.buffer.push("<form class='index'>\n\n  <div class='brand'>\n    <h1>SWAGGER</h1>\n    <p class='tagline'>Your style. A perfect fit.</p>\n  </div>\n\n  <div class='container'>\n\n    <div class='login'>\n      "),n.buffer.push(h((r=s.outlet||t&&t.outlet,i={hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n},r?r.call(t,"login",i):l.call(t,"outlet","login",i)))),n.buffer.push("\n    </div>\n\n    <div class='signup'>\n      "),n.buffer.push(h((r=s.outlet||t&&t.outlet,i={hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n},r?r.call(t,"signup",i):l.call(t,"outlet","signup",i)))),n.buffer.push("\n    </div>\n\n  </div>\n</form>\n"),o}),Ember.TEMPLATES.login=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o="",l=s.helperMissing,h=this.escapeExpression;return n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"email","class":"input email",value:"email",placeholder:"Email"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n"),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"password","class":"input password",value:"password",placeholder:"Password"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n<input class='btn btn-success' value='Log In' "),n.buffer.push(h(s.action.call(t,"logIn",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n"),o}),Ember.TEMPLATES.profile=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o,l="",h=s.helperMissing,p=this.escapeExpression;return n.buffer.push("<form class='profile'>\n  "),n.buffer.push(p((i=s["link-to"]||t&&t["link-to"],o={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},i?i.call(t,"Profile Picture","profile.avatar",o):h.call(t,"link-to","Profile Picture","profile.avatar",o)))),n.buffer.push("\n  "),n.buffer.push(p((i=s["link-to"]||t&&t["link-to"],o={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},i?i.call(t,"Important Dates","profile.dates",o):h.call(t,"link-to","Important Dates","profile.dates",o)))),n.buffer.push("\n  "),n.buffer.push(p((i=s["link-to"]||t&&t["link-to"],o={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},i?i.call(t,"Interests","profile.interests",o):h.call(t,"link-to","Interests","profile.interests",o)))),n.buffer.push("\n  "),n.buffer.push(p((i=s["link-to"]||t&&t["link-to"],o={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},i?i.call(t,"Aversions","profile.aversions",o):h.call(t,"link-to","Aversions","profile.aversions",o)))),n.buffer.push("\n  "),n.buffer.push(p((i=s["link-to"]||t&&t["link-to"],o={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},i?i.call(t,"Just My Size","profile.sizes",o):h.call(t,"link-to","Just My Size","profile.sizes",o)))),n.buffer.push("\n</form>\n\n"),r=s._triageMustache.call(t,"outlet",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(r||0===r)&&n.buffer.push(r),n.buffer.push("\n"),l}),Ember.TEMPLATES.search=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n="";return t.buffer.push("\n    <ul>\n        <li>\n          <p>"),a=s._triageMustache.call(e,"username",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</p>\n          <img class='imgAvatar' "),t.buffer.push(l(s["bind-attr"].call(e,{hash:{src:"imgURL"},hashTypes:{src:"ID"},hashContexts:{src:e},contexts:[],types:[],data:t}))),t.buffer.push(" />\n          <button class='btn btn-info'"),t.buffer.push(l(s.action.call(e,"addFriend",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push(">Add Friend</button>\n        </li>\n    </ul>\n  "),n}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var i,o="",l=this.escapeExpression,h=this;return n.buffer.push("<form class='search'>\n  <h2>Find Friends</h2>\n\n  "),i=s.each.call(t,"arrangedContent",{hash:{itemController:"SearchItem"},hashTypes:{itemController:"STRING"},hashContexts:{itemController:t},inverse:h.noop,fn:h.program(1,r,n),contexts:[t],types:["ID"],data:n}),(i||0===i)&&n.buffer.push(i),n.buffer.push("\n</form>\n\n<form class='filter'>\n  Name\n  Email\n</form>\n"),o}),Ember.TEMPLATES.signup=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o="",l=s.helperMissing,h=this.escapeExpression;return n.buffer.push("<h2>New to Swag?<span>Join today!</span></h2>\n"),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"text","class":"input",value:"username",placeholder:"User Name"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n"),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"email","class":"input",value:"email",placeholder:"Email"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n"),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"password","class":"input",value:"password",placeholder:"Password"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n<input class='btn btn-info' value='Sign up for Swagger' "),n.buffer.push(h(s.action.call(t,"signUp",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n"),o}),Ember.TEMPLATES.swag=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n="";return t.buffer.push("\n      <img class='imgswag' "),t.buffer.push(p(s["bind-attr"].call(e,{hash:{src:"swagURL"},hashTypes:{src:"ID"},hashContexts:{src:e},contexts:[],types:[],data:t}))),t.buffer.push(" />\n      <ul>\n        <li class='data'>"),a=s._triageMustache.call(e,"description",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"retailer",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"location",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"price",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li><button class='btn btn-danger'"),t.buffer.push(p(s.action.call(e,"removeSwag",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push(">REMOVE ITEM</button></li>\n      </ul>\n    "),n}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var i,o,l,h="",p=this.escapeExpression,u=s.helperMissing,c=this;return n.buffer.push("<form class='addswag'>\n  <h2>Add Swag Bag Items</h2>\n\n    <div class='image'>\n      <img class='imgswag'"),n.buffer.push(p(s["bind-attr"].call(t,{hash:{src:"swagURL"},hashTypes:{src:"ID"},hashContexts:{src:t},contexts:[],types:[],data:n}))),n.buffer.push(" "),n.buffer.push(p(s.action.call(t,"addImage",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push("/>\n    </div>\n\n    <div class='data'>\n      "),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"text","class":"input description",value:"description",placeholder:"Item Description"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n      "),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"text","class":"input",value:"retailer",placeholder:"Store"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n      "),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"text","class":"input",value:"location",placeholder:"Store Location"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n      "),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"text","class":"input",value:"price",placeholder:"Price"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n      <button class='btn btn-success' "),n.buffer.push(p(s.action.call(t,"saveSwag",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">ADD ITEM</button>\n    </div>\n</form>\n\n<form class='swagbag'>\n  <h2>Current Swag Bag</h2>\n  <div class='item'>\n    "),i=s.each.call(t,"currentUser.swagbag",{hash:{itemController:"SwagItem"},hashTypes:{itemController:"STRING"},hashContexts:{itemController:t},inverse:c.noop,fn:c.program(1,r,n),contexts:[t],types:["ID"],data:n}),(i||0===i)&&n.buffer.push(i),n.buffer.push("\n  </div>\n</form>\n"),h}),Ember.TEMPLATES.welcome=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r="",i=this.escapeExpression;return n.buffer.push("<h2>Welcome to Swag!</h2>\n<input class='btn btn-success' value='Continue' "),n.buffer.push(i(s.action.call(t,"welcome",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">\n"),r}),Ember.TEMPLATES["profile/aversions"]=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n="";return t.buffer.push("\n  <li>"),a=s._triageMustache.call(e,"aversionText",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n    <button class='btn btn-danger'"),t.buffer.push(p(s.action.call(e,"removeAversion",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push(">X</button>\n  </li>\n"),n}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var i,o,l,h="",p=this.escapeExpression,u=s.helperMissing,c=this;return n.buffer.push(p((o=s["link-to"]||t&&t["link-to"],l={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},o?o.call(t,"Back","profile.interests",l):u.call(t,"link-to","Back","profile.interests",l)))),n.buffer.push("\n"),n.buffer.push(p((o=s["link-to"]||t&&t["link-to"],l={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},o?o.call(t,"Next","profile.sizes",l):u.call(t,"link-to","Next","profile.sizes",l)))),n.buffer.push("\n\n<label>Add Aversion</label>\n\n"),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"string","class":"create-user-input",value:"aversionText",placeholder:"aversion"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n<button class='btn btn-info'"),n.buffer.push(p(s.action.call(t,"addAversion",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">Add</button>\n"),i=s.each.call(t,"currentUser.aversions",{hash:{itemController:"aversion"},hashTypes:{itemController:"STRING"},hashContexts:{itemController:t},inverse:c.noop,fn:c.program(1,r,n),contexts:[t],types:["ID"],data:n}),(i||0===i)&&n.buffer.push(i),n.buffer.push("\n"),h}),Ember.TEMPLATES["profile/avatar"]=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a="";return t.buffer.push("\n    <img class='imgavatar' "),t.buffer.push(u(s["bind-attr"].call(e,{hash:{src:"currentUser.imgURL"},hashTypes:{src:"ID"},hashContexts:{src:e},contexts:[],types:[],data:t}))),t.buffer.push(" />\n    <button class='btn btn-warning' "),t.buffer.push(u(s.action.call(e,"addAvatar",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push("><i></i>Change Photo</button>\n  "),a}function i(e,t){var a="";return t.buffer.push("\n    <button class='btn btn-warning' "),t.buffer.push(u(s.action.call(e,"addAvatar",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push("><i></i>Add Photo</button>\n  "),a}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,p="",u=this.escapeExpression,c=s.helperMissing,f=this;return n.buffer.push("<form class='addavatar'>\n  <h1>Profile Picture</h1>\n  "),n.buffer.push(u((l=s["link-to"]||t&&t["link-to"],h={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},l?l.call(t,"Next","profile.dates",h):c.call(t,"link-to","Next","profile.dates",h)))),n.buffer.push("\n\n  "),o=s["if"].call(t,"currentUser.imgURL",{hash:{},hashTypes:{},hashContexts:{},inverse:f.program(3,i,n),fn:f.program(1,r,n),contexts:[t],types:["ID"],data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push("\n\n  <button class='btn btn-info' "),n.buffer.push(u(s.action.call(t,"updateProfile",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">Update</button>\n</form>\n"),p}),Ember.TEMPLATES["profile/dates"]=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o="",l=s.helperMissing,h=this.escapeExpression;return n.buffer.push("<form class='adddates'>\n  <h2>Important Dates</h2>\n  "),n.buffer.push(h((r=s["link-to"]||t&&t["link-to"],i={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},r?r.call(t,"Back","profile.avatar",i):l.call(t,"link-to","Back","profile.avatar",i)))),n.buffer.push("\n  "),n.buffer.push(h((r=s["link-to"]||t&&t["link-to"],i={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},r?r.call(t,"Next","profile.interests",i):l.call(t,"link-to","Next","profile.interests",i)))),n.buffer.push("\n  <label>Birthday</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"text","class":"create-user-input birthday",value:"currentUser.birthday",placeholder:"birthday"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n  <label>Anniversary</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"text","class":"create-user-input anniversary",value:"currentUser.anniversary",placeholder:"anniversary"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n\n  <button class='btn btn-info'"),n.buffer.push(h(s.action.call(t,"updateProfile",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">Update</button>\n</form>\n"),o}),Ember.TEMPLATES["profile/interests"]=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n="";return t.buffer.push("\n    <li>\n      "),a=s._triageMustache.call(e,"interestText",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n    </li>\n    <button "),t.buffer.push(p(s.action.call(e,"removeInterest",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push(">Delete Item</button>\n  "),n}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var i,o,l,h="",p=this.escapeExpression,u=s.helperMissing,c=this;return n.buffer.push("<form class='addinterests'>\n  <label>Add Interest</label>\n  "),n.buffer.push(p((o=s["link-to"]||t&&t["link-to"],l={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},o?o.call(t,"Back","profile.dates",l):u.call(t,"link-to","Back","profile.dates",l)))),n.buffer.push("\n  "),n.buffer.push(p((o=s["link-to"]||t&&t["link-to"],l={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},o?o.call(t,"Next","profile.aversions",l):u.call(t,"link-to","Next","profile.aversions",l)))),n.buffer.push("\n  "),n.buffer.push(p((o=s.input||t&&t.input,l={hash:{type:"string","class":"create-user-input",value:"interestText",placeholder:"interest"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},o?o.call(t,l):u.call(t,"input",l)))),n.buffer.push("\n  <button class='btn btn-info'"),n.buffer.push(p(s.action.call(t,"addInterest",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">Add Interest</button>\n</form>\n\n<form class='interests'>\n  "),i=s.each.call(t,"currentUser.interests",{hash:{itemController:"interest"},hashTypes:{itemController:"STRING"},hashContexts:{itemController:t},inverse:c.noop,fn:c.program(1,r,n),contexts:[t],types:["ID"],data:n}),(i||0===i)&&n.buffer.push(i),n.buffer.push("\n</form>\n"),h}),Ember.TEMPLATES["profile/sizes"]=Ember.Handlebars.template(function(e,t,s,a,n){this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,i,o="",l=s.helperMissing,h=this.escapeExpression;return n.buffer.push("<form class='addsizes'>\n\n"),n.buffer.push(h((r=s["link-to"]||t&&t["link-to"],i={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},r?r.call(t,"Back","profile.aversions",i):l.call(t,"link-to","Back","profile.aversions",i)))),n.buffer.push("\n"),n.buffer.push(h((r=s["link-to"]||t&&t["link-to"],i={hash:{},hashTypes:{},hashContexts:{},contexts:[t,t],types:["STRING","STRING"],data:n},r?r.call(t,"Next","swag",i):l.call(t,"link-to","Next","swag",i)))),n.buffer.push("\n\n  <label>Hat Size</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"string","class":"create-user-input",value:"currentUser.hatSize",placeholder:"hat size"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n  <label>Shirt Size</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"string","class":"create-user-input",value:"currentUser.shirtSize",placeholder:"shirt size"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n  <label>Pant Size</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"string","class":"create-user-input",value:"currentUser.pantSize",placeholder:"pant size"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n  <label>Shoe Size</label>\n  "),n.buffer.push(h((r=s.input||t&&t.input,i={hash:{type:"string","class":"create-user-input",value:"currentUser.shoeSize",placeholder:"shoe size"},hashTypes:{type:"STRING","class":"STRING",value:"ID",placeholder:"STRING"},hashContexts:{type:t,"class":t,value:t,placeholder:t},contexts:[],types:[],data:n},r?r.call(t,i):l.call(t,"input",i)))),n.buffer.push("\n\n  <button class='btn btn-info'"),n.buffer.push(h(s.action.call(t,"updateProfile",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push(">Update</button>\n</form>\n"),o
-}),Ember.TEMPLATES["friends/index"]=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n,r,i="";return t.buffer.push("\n      <ul>\n        <li>\n          <p>"),a=s._triageMustache.call(e,"username",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</p>\n          <img class='imgAvatar' "),t.buffer.push(l(s["bind-attr"].call(e,{hash:{src:"imgURL"},hashTypes:{src:"ID"},hashContexts:{src:e},contexts:[],types:[],data:t}))),t.buffer.push(" />\n          "),t.buffer.push(l((n=s["link-to"]||e&&e["link-to"],r={hash:{"class":"btn"},hashTypes:{"class":"STRING"},hashContexts:{"class":e},contexts:[e,e,e],types:["STRING","STRING","ID"],data:t},n?n.call(e,"View Swag","friends.show","",r):h.call(e,"link-to","View Swag","friends.show","",r)))),t.buffer.push("\n          <button class='btn btn-warning'"),t.buffer.push(l(s.action.call(e,"removeFriend",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["STRING"],data:t}))),t.buffer.push(">Remove Friend</button>\n        </li>\n      </ul>\n  "),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var i,o="",l=this.escapeExpression,h=s.helperMissing,p=this;return n.buffer.push("<form class='friends'>\n  <button "),n.buffer.push(l(s.action.call(t,"findFriends",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["STRING"],data:n}))),n.buffer.push("><i></i>Find Friends</button>\n\n  <h2>My Friends</h2>\n\n  "),i=s.each.call(t,"arrangedContent",{hash:{itemController:"FriendsItem"},hashTypes:{itemController:"STRING"},hashContexts:{itemController:t},inverse:p.noop,fn:p.program(1,r,n),contexts:[t],types:["ID"],data:n}),(i||0===i)&&n.buffer.push(i),n.buffer.push("\n</form>\n"),o}),Ember.TEMPLATES["friends/show"]=Ember.Handlebars.template(function(e,t,s,a,n){function r(e,t){var a,n="";return t.buffer.push("\n      <li>"),a=s._triageMustache.call(e,"interestText",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n    "),n}function i(e,t){var a,n="";return t.buffer.push("\n      <li>"),a=s._triageMustache.call(e,"aversionText",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n    "),n}function o(e,t){var a,n="";return t.buffer.push("\n      <img class='imgswag' "),t.buffer.push(p(s["bind-attr"].call(e,{hash:{src:"swagURL"},hashTypes:{src:"ID"},hashContexts:{src:e},contexts:[],types:[],data:t}))),t.buffer.push(" />\n      <ul>\n        <li class='data'>"),a=s._triageMustache.call(e,"description",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"retailer",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"location",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n        <li class='data'>"),a=s._triageMustache.call(e,"price",{hash:{},hashTypes:{},hashContexts:{},contexts:[e],types:["ID"],data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("</li>\n      </ul>\n    "),n}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var l,h="",p=this.escapeExpression,u=this;return n.buffer.push("<form class=friends-profile>\n  <ul>\n    <li><label>Birthday:</label>"),l=s._triageMustache.call(t,"birthday",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n    <li><label>Anniversary:</label>"),l=s._triageMustache.call(t,"anniversary",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n  </ul>\n\n  <ul>\n  "),l=s.each.call(t,"interests",{hash:{},hashTypes:{},hashContexts:{},inverse:u.noop,fn:u.program(1,r,n),contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n  </ul>\n\n  <ul>\n    "),l=s.each.call(t,"aversions",{hash:{},hashTypes:{},hashContexts:{},inverse:u.noop,fn:u.program(3,i,n),contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n  </ul>\n\n  <ul>\n    <li><label>Hat Size:</label>"),l=s._triageMustache.call(t,"hatSize",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n    <li><label>Shirt Size:</label>"),l=s._triageMustache.call(t,"shirtSize",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n    <li><label>Pant Size:</label>"),l=s._triageMustache.call(t,"pantSize",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n    <li><label>Shoe Size:</label>"),l=s._triageMustache.call(t,"shoeSize",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("</li>\n  </ul>\n</form>\n\n\n\n<form class='swagbag'>\n  <h2>"),l=s._triageMustache.call(t,"username",{hash:{},hashTypes:{},hashContexts:{},contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("'s Swag</h2>\n\n  <div class='item'>\n    "),l=s.each.call(t,"swagbag",{hash:{},hashTypes:{},hashContexts:{},inverse:u.noop,fn:u.program(5,o,n),contexts:[t],types:["ID"],data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n  </div>\n\n</form>\n"),h});
+/* globals Ember, Application, DS, Firebase, filepicker */
+
+(function() {
+  'use strict';
+
+  window.Application = Ember.Application.create({
+    LOG_TRANSITIONS: true
+  });
+
+  Application.ref = new Firebase('https://myswag.firebaseio.com/');
+
+  Application.ApplicationAdapter = DS.FirebaseAdapter.extend({
+    firebase: Application.ref
+  });
+
+  filepicker.setKey('AZCePNZlYTB2qdKHk2cOiz');
+
+  Ember.Application.initializer({
+    name: 'firebase-session',
+
+    initialize: function(container, application) {
+      var token = localStorage.getItem('firebasetoken');
+      if (token) {
+        application.deferReadiness();
+        var session = container.lookup('controller:session');
+        session.authWithToken(token).finally(function() {
+          application.advanceReadiness();
+        }).catch(function(error){
+          console.error(error);
+        }).then(function(){
+          console.log('success');
+        });
+
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.VerifyUser = Ember.Mixin.create({
+    beforeModel: function() {
+      var user = this.controllerFor('session').get('currentUser');
+      if (!user) {
+        this.transitionTo('index');
+      }
+    },
+  });
+
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.Router.map(function() {
+
+    this.route('index', {
+      path: '/'
+    });
+
+    this.route('search', {
+      path: '/searchpeople'
+    });
+
+    this.resource('profile', {
+      path: '/profile'
+    }, function() {
+      this.route('aversions');
+      this.route('avatar');
+      this.route('dates');
+      this.route('interests');
+      this.route('sizes');
+    });
+
+    this.route('swag', {
+      path: '/myswag'
+    });
+
+    this.resource('friends', {
+      path: '/friends'
+    }, function() {
+      this.route('show', {
+        path: ':user_id'
+      });
+    });
+
+    this.route('welcome', {
+      path: '/welcome'
+    });
+
+  });
+
+  Application.FriendsIndexRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var currentUser = this.controllerFor('application').get('currentUser');
+      return currentUser.get('friends');
+    }
+  });
+
+  Application.FriendsShowRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+  Application.IndexRoute = Ember.Route.extend({
+
+    renderTemplate: function() {
+      this.render('index');
+
+      this.render('login', {
+        into: 'index',
+        outlet: 'login',
+        controller: 'login'
+      });
+
+      this.render('signup', {
+        into: 'index',
+        outlet: 'signup',
+        controller: 'signup'
+      });
+    }
+  });
+
+  Application.ProfileRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+  Application.ProfileAvatarRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+
+  Application.ProfileAversionsRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
+
+  Application.ProfileDatesRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+  Application.ProfileInterestsRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
+
+  Application.ProfileSizesRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+  Application.SearchRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var currentUser = this.controllerFor('application').get('currentUser');
+
+      return Ember.RSVP.hash({
+        friends: currentUser.get('friends.content.content'),
+        users: this.store.find('user')
+      }).then(function(hash) {
+        var friends = hash.friends;
+        var notFriends = hash.users;
+        notFriends.removeObject(currentUser);
+        notFriends.removeObjects(friends);
+        return notFriends;
+      });
+    }
+  });
+
+  Application.SwagRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileDatesView = Ember.View.extend({
+    didInsertElement: function() {
+      this.$('.birthday').pickadate();
+      this.$('.anniversary').pickadate();
+    }
+  });
+
+})();
+
+/* globals Application, Ember */
+
+(function () {
+  'use strict';
+
+  Application.ApplicationController = Ember.Controller.extend({
+    needs: ['session'],
+    currentUser: Ember.computed.alias('controllers.session.currentUser'),
+
+    actions: {
+      logOut: function() {
+        //this.transitionToRoute('index');
+        localStorage.removeItem('firebasetoken');
+        Application.reset();
+        var dataRef = Application.ref;
+        dataRef.unauth();
+      },
+
+      goToSwag: function() {
+        this.transitionToRoute('swag');
+      },
+
+      goToFriends: function() {
+        this.transitionToRoute('friends');
+      },
+
+      goToProfile: function() {
+        this.transitionToRoute('profile.avatar');
+      }
+    }
+});
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.IndexController = Ember.Controller.extend({
+    // needs: ['application'],
+    // currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+
+  });
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+  Application.LoginController = Ember.Controller.extend({
+    needs: ['session'],
+
+    actions: {
+      logIn: function() {
+        var that = this;
+        var credentials = this.getProperties('email', 'password');
+        this.get('controllers.session').authUser(credentials).then(function(){
+          console.log('there');
+          that.transitionToRoute('swag');
+        });
+      },
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.SearchController = Ember.ArrayController.extend({
+    sortProperties: ['username'],
+    sortAscending: true,
+
+  });
+
+  Application.SearchItemController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      addFriend: function() {
+        var user = this.get('model');
+
+        this.get('currentUser').get('friends').addObject(user);
+        this.get('currentUser').save();
+
+        user.get('friends').addObject(this.get('currentUser'));
+        user.save();
+      }
+    }
+  });
+
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.SessionController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: null,
+
+    authUser: function(credentials) {
+      var that = this;
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        Application.ref.authWithPassword(
+          credentials,
+          function(error, authData) {
+            if (error === null) {
+              that.setStorage(authData).then(resolve, reject);
+            } else {
+              console.log('error in Session Controller authUser');
+            }
+        });
+      });
+    },
+
+    setStorage: function(authData) {
+      var that = this;
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        localStorage.setItem('firebasetoken', authData.token);
+        console.log('About to find user', authData.uid);
+        that.store.find('user', authData.uid).then(function(user) {
+            console.log('User:', user);
+            that.set('currentUser', user);
+            resolve(user);
+          },
+          function(error) {
+            // The user wasn't found, so I must create it
+            // if (error === null) {
+              console.error('Not found', error);
+              /////////////////////////////////////////////////////////////////set username here
+              var user = that.store.recordForId('user', authData.uid);
+              if(user){
+                user.loadedData();
+                that.set('currentUser', user);
+                resolve(user);
+              } else {
+                reject();
+              }
+          });
+      });
+    },
+
+    authWithToken: function(token) {
+      var that = this;
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        Application.ref.authWithCustomToken(token, function(error, authData) {
+          if (error === null) {
+            that.setStorage(authData).then(resolve, reject);
+            console.log('Login Succeeded!', authData);
+          } else {
+            reject(error);
+            console.log('Login Failed!', error);
+            console.log('Error authenticating user:', error);
+          }
+        });
+      });
+    }
+
+
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.SignupController = Ember.ArrayController.extend({
+    needs: ['session'],
+
+    actions: {
+      signUp: function() {
+        var that = this;
+        var credentials = this.getProperties('email', 'password');
+
+        Application.ref.createUser(credentials, function(error) {
+          if (! error) {
+            that.get('controllers.session').authUser(credentials).then(function(user) {
+              console.log('here it is');
+              user.setProperties({
+                username: that.get('username'),
+                email: that.get('email')
+              });
+              user.save().then(function() {
+                console.log('User created successfully');
+                that.transitionToRoute('profile.avatar');
+              });
+            });
+          } else {
+            console.log('Error creating user:', error);
+          }
+        });
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember, filepicker */
+
+(function() {
+  'use strict';
+
+  Application.SwagController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+
+      addImage: function() {
+        var that = this;
+
+        filepicker.pickAndStore({}, {}, function(Blobs) {
+          that.set('swagURL', Blobs[0].url);
+        });
+      },
+
+      saveSwag: function() {
+
+        var swag = this.store.createRecord('swag', {
+          swagURL: this.get('swagURL'),
+          description: this.get('description'),
+          retailer: this.get('retailer'),
+          location: this.get('location'),
+          price: this.get('price')
+        });
+
+        swag.save();
+
+        this.get('currentUser.swagbag').addObject(swag);
+        this.get('currentUser').save();
+
+      },
+    }
+  });
+
+  Application.SwagItemController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      removeSwag: function() {
+
+        var user = this.get('currentUser');
+        user.get('swagbag').removeObject(this.get('swag'));
+        user.save();
+
+        this.get('model').destroyRecord();
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.WelcomeController = Ember.ArrayController.extend({
+    actions: {
+      welcome: function() {
+        var self = this;
+        self.transitionToRoute('profile.dates');
+      }
+    }
+  });
+
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileAversionsController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+
+      addAversion: function() {
+        var aversion = this.store.createRecord('aversion', {
+           aversionText: this.get('aversionText')
+         });
+
+        this.get('currentUser').get('aversions').addObject(aversion);
+        this.get('currentUser').save();
+      },
+    }
+  });
+
+
+  Application.AversionController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      removeAversion: function(){
+
+      var user = this.get('currentUser');
+      user.get('aversions').removeObject(this.get('model'));
+      user.save();
+
+        // this.get('model').destroyRecord();
+        // console.log(this.get('currentUser'));
+        //
+        // this.get('curentUser').save().catch(function(error){
+        //   console.log(error);
+        // });
+
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember, filepicker */
+
+(function() {
+  'use strict';
+
+  Application.ProfileAvatarController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+
+      addAvatar: function() {
+        var that = this;
+
+        filepicker.pickAndStore({},{},function(Blobs){
+          that.set('currentUser.imgURL', Blobs[0].url);
+        });
+      },
+
+       updateProfile: function() {
+         this.get('currentUser').save();
+         window.alert('Profile Picture Saved');
+       }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileDatesController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      updateProfile: function() {
+        this.get('currentUser').save();
+        window.alert('Dates Saved');
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileInterestsController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+
+      addInterest: function() {
+        var interest = this.store.createRecord('interest', {
+           interestText: this.get('interestText')
+         });
+         console.log(interest);
+        this.get('currentUser').get('interests').addObject(interest);
+        this.get('currentUser').save();
+      },
+    }
+  });
+
+
+  Application.InterestController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      removeInterest: function(){
+
+      var user = this.get('currentUser');
+      user.get('interests').removeObject(this.get('model'));
+      user.save();
+
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileIndexController = Ember.ArrayController.extend({
+    needs: ['application'],
+
+
+    actions: {
+
+
+    }
+  });
+
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.ProfileSizesController = Ember.Controller.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      updateProfile: function() {
+        this.get('currentUser').save();
+        window.alert('Sizes Saved');
+      }
+    }
+  });
+})();
+
+/* globals Application, Ember */
+
+(function() {
+  'use strict';
+
+  Application.FriendsIndexController = Ember.ArrayController.extend({
+    sortProperties: ['username'],
+    sortAscending: true,
+
+    actions: {
+      findFriends: function() {
+        this.transitionToRoute('search');
+      },
+    }
+  });
+
+  Application.FriendsItemController = Ember.ObjectController.extend({
+    needs: ['application'],
+    currentUser: Ember.computed.alias('controllers.application.currentUser'),
+
+    actions: {
+      removeFriend: function() {
+        var user = this.get('model');
+
+        this.get('currentUser').get('friends').removeObject(user);
+        this.get('currentUser').save();
+
+        user.get('friends').removeObject(this.get('currentUser'));
+        user.save();
+      },
+    }
+  });
+})();
+
+/*globals Application, DS */
+
+(function () {
+  'use strict';
+
+  Application.Aversion = DS.Model.extend({
+    aversionText: DS.attr('string')
+  });
+
+})();
+
+/*globals Application, DS */
+
+(function () {
+  'use strict';
+
+  Application.Interest = DS.Model.extend({
+    interestText: DS.attr('string')
+  });
+
+})();
+
+/*globals Application, DS */
+
+(function () {
+  'use strict';
+
+  Application.User = DS.Model.extend({
+
+    username: DS.attr('string'),
+    email: DS.attr('string'),
+
+    imgURL: DS.attr('string'),
+
+    birthday: DS.attr('string'),
+    anniversary: DS.attr('string'),
+
+    beltSize: DS.attr('string'),
+    hatSize: DS.attr('string'),
+    pantSize: DS.attr('string'),
+    shirtSize: DS.attr('string'),
+    shoeSize: DS.attr('string'),
+
+    interests: DS.hasMany('interest', {embedded: true}),
+
+    aversions: DS.hasMany('aversion', {embedded: true}),
+
+    swagbag: DS.hasMany('swag', {async: true}),
+
+    friends: DS.hasMany('user', {async: true}),
+  });
+
+})();
+
+/*globals Application, DS */
+
+(function() {
+  'use strict';
+
+  Application.Swag = DS.Model.extend({
+    swagURL: DS.attr('string'),
+    description: DS.attr('string'),
+    retailer: DS.attr('string'),
+    location: DS.attr('string'),
+    price: DS.attr('string')
+  });
+
+})();
+
+Ember.TEMPLATES["application"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class='header'>\n  <a href=# class=\"octicon octicon-gist-secret\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "goToSwag", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n    <span class='navigation'>MY SWAG</span>\n  </a>\n\n  <a href=# class=\"octicon octicon-organization\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "goToFriends", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n    <span class='navigation'>FRIENDS</span>\n  </a>\n\n  <a href=# class='octicon octicon-gear' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "goToProfile", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n    <span class='navigation'>SETTINGS</span>\n  </a>\n\n  <a href=# class=\"octicon octicon-sign-out\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "logOut", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n    <span class='navigation'>SIGN OUT</span>\n  </a>\n</div>\n\n<div>\n    ");
+  stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</div>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["index"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<form class='index'>\n\n  <div class='brand'>\n    <h1>SWAGGER</h1>\n    <p class='tagline'>Your style. A perfect fit.</p>\n  </div>\n\n  <div class='container'>\n\n    <div class='login'>\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.outlet || (depth0 && depth0.outlet),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "outlet", "login", options))));
+  data.buffer.push("\n    </div>\n\n    <div class='signup'>\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.outlet || (depth0 && depth0.outlet),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "signup", options) : helperMissing.call(depth0, "outlet", "signup", options))));
+  data.buffer.push("\n    </div>\n\n  </div>\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["login"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("email"),
+    'class': ("input email"),
+    'value': ("email"),
+    'placeholder': ("Email")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("password"),
+    'class': ("input password"),
+    'value': ("password"),
+    'placeholder': ("Password")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n<input class='btn btn-success' value='Log In' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "logIn", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<form class='profile'>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Profile Picture", "profile.avatar", options) : helperMissing.call(depth0, "link-to", "Profile Picture", "profile.avatar", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Important Dates", "profile.dates", options) : helperMissing.call(depth0, "link-to", "Important Dates", "profile.dates", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Interests", "profile.interests", options) : helperMissing.call(depth0, "link-to", "Interests", "profile.interests", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Aversions", "profile.aversions", options) : helperMissing.call(depth0, "link-to", "Aversions", "profile.aversions", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Just My Size", "profile.sizes", options) : helperMissing.call(depth0, "link-to", "Just My Size", "profile.sizes", options))));
+  data.buffer.push("\n</form>\n\n");
+  stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["search"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n    <ul>\n        <li>\n          <p>");
+  stack1 = helpers._triageMustache.call(depth0, "username", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</p>\n          <img class='imgAvatar' ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("imgURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" />\n          <button class='btn btn-info'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addFriend", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Add Friend</button>\n        </li>\n    </ul>\n  ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class='search'>\n  <h2>Find Friends</h2>\n\n  ");
+  stack1 = helpers.each.call(depth0, "arrangedContent", {hash:{
+    'itemController': ("SearchItem")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</form>\n\n<form class='filter'>\n  Name\n  Email\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["signup"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<h2>New to Swag?<span>Join today!</span></h2>\n");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("input"),
+    'value': ("username"),
+    'placeholder': ("User Name")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("email"),
+    'class': ("input"),
+    'value': ("email"),
+    'placeholder': ("Email")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("password"),
+    'class': ("input"),
+    'value': ("password"),
+    'placeholder': ("Password")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n<input class='btn btn-info' value='Sign up for Swagger' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "signUp", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["swag"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n      <img class='imgswag' ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("swagURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" />\n      <ul>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "description", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "retailer", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "location", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "price", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li><button class='btn btn-danger'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeSwag", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">REMOVE ITEM</button></li>\n      </ul>\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class='addswag'>\n  <h2>Add Swag Bag Items</h2>\n\n    <div class='image'>\n      <img class='imgswag'");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("swagURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addImage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("/>\n    </div>\n\n    <div class='data'>\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("input description"),
+    'value': ("description"),
+    'placeholder': ("Item Description")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("input"),
+    'value': ("retailer"),
+    'placeholder': ("Store")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("input"),
+    'value': ("location"),
+    'placeholder': ("Store Location")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n      ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("input"),
+    'value': ("price"),
+    'placeholder': ("Price")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n      <button class='btn btn-success' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveSwag", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">ADD ITEM</button>\n    </div>\n</form>\n\n<form class='swagbag'>\n  <h2>Current Swag Bag</h2>\n  <div class='item'>\n    ");
+  stack1 = helpers.each.call(depth0, "currentUser.swagbag", {hash:{
+    'itemController': ("SwagItem")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </div>\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["welcome"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<h2>Welcome to Swag!</h2>\n<input class='btn btn-success' value='Continue' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "welcome", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile/aversions"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n  <li>");
+  stack1 = helpers._triageMustache.call(depth0, "aversionText", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    <button class='btn btn-danger'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeAversion", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">X</button>\n  </li>\n");
+  return buffer;
+  }
+
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Back", "profile.interests", options) : helperMissing.call(depth0, "link-to", "Back", "profile.interests", options))));
+  data.buffer.push("\n");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Next", "profile.sizes", options) : helperMissing.call(depth0, "link-to", "Next", "profile.sizes", options))));
+  data.buffer.push("\n\n<label>Add Aversion</label>\n\n");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("aversionText"),
+    'placeholder': ("aversion")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n<button class='btn btn-info'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addAversion", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Add</button>\n");
+  stack1 = helpers.each.call(depth0, "currentUser.aversions", {hash:{
+    'itemController': ("aversion")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile/avatar"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push("\n    <img class='imgavatar' ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("currentUser.imgURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" />\n    <button class='btn btn-warning' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addAvatar", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("><i></i>Change Photo</button>\n  ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push("\n    <button class='btn btn-warning' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addAvatar", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("><i></i>Add Photo</button>\n  ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class='addavatar'>\n  <h1>Profile Picture</h1>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Next", "profile.dates", options) : helperMissing.call(depth0, "link-to", "Next", "profile.dates", options))));
+  data.buffer.push("\n\n  ");
+  stack1 = helpers['if'].call(depth0, "currentUser.imgURL", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n  <button class='btn btn-info' ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "updateProfile", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Update</button>\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile/dates"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<form class='adddates'>\n  <h2>Important Dates</h2>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Back", "profile.avatar", options) : helperMissing.call(depth0, "link-to", "Back", "profile.avatar", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Next", "profile.interests", options) : helperMissing.call(depth0, "link-to", "Next", "profile.interests", options))));
+  data.buffer.push("\n  <label>Birthday</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("create-user-input birthday"),
+    'value': ("currentUser.birthday"),
+    'placeholder': ("birthday")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n  <label>Anniversary</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'class': ("create-user-input anniversary"),
+    'value': ("currentUser.anniversary"),
+    'placeholder': ("anniversary")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n\n  <button class='btn btn-info'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "updateProfile", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Update</button>\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile/interests"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n    <li>\n      ");
+  stack1 = helpers._triageMustache.call(depth0, "interestText", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    </li>\n    <button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeInterest", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Delete Item</button>\n  ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class='addinterests'>\n  <label>Add Interest</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Back", "profile.dates", options) : helperMissing.call(depth0, "link-to", "Back", "profile.dates", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Next", "profile.aversions", options) : helperMissing.call(depth0, "link-to", "Next", "profile.aversions", options))));
+  data.buffer.push("\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("interestText"),
+    'placeholder': ("interest")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n  <button class='btn btn-info'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "addInterest", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Add Interest</button>\n</form>\n\n<form class='interests'>\n  ");
+  stack1 = helpers.each.call(depth0, "currentUser.interests", {hash:{
+    'itemController': ("interest")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["profile/sizes"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<form class='addsizes'>\n\n");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Back", "profile.aversions", options) : helperMissing.call(depth0, "link-to", "Back", "profile.aversions", options))));
+  data.buffer.push("\n");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data},helper ? helper.call(depth0, "Next", "swag", options) : helperMissing.call(depth0, "link-to", "Next", "swag", options))));
+  data.buffer.push("\n\n  <label>Hat Size</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("currentUser.hatSize"),
+    'placeholder': ("hat size")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n  <label>Shirt Size</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("currentUser.shirtSize"),
+    'placeholder': ("shirt size")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n  <label>Pant Size</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("currentUser.pantSize"),
+    'placeholder': ("pant size")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n  <label>Shoe Size</label>\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("string"),
+    'class': ("create-user-input"),
+    'value': ("currentUser.shoeSize"),
+    'placeholder': ("shoe size")
+  },hashTypes:{'type': "STRING",'class': "STRING",'value': "ID",'placeholder': "STRING"},hashContexts:{'type': depth0,'class': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n\n  <button class='btn btn-info'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "updateProfile", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Update</button>\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["friends/index"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, helper, options;
+  data.buffer.push("\n      <ul>\n        <li>\n          <p>");
+  stack1 = helpers._triageMustache.call(depth0, "username", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</p>\n          <img class='imgAvatar' ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("imgURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" />\n          ");
+  data.buffer.push(escapeExpression((helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("btn")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],data:data},helper ? helper.call(depth0, "View Swag", "friends.show", "", options) : helperMissing.call(depth0, "link-to", "View Swag", "friends.show", "", options))));
+  data.buffer.push("\n          <button class='btn btn-warning'");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeFriend", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Remove Friend</button>\n        </li>\n      </ul>\n  ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class='friends'>\n  <button ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "findFriends", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("><i></i>Find Friends</button>\n\n  <h2>My Friends</h2>\n\n  ");
+  stack1 = helpers.each.call(depth0, "arrangedContent", {hash:{
+    'itemController': ("FriendsItem")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</form>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["friends/show"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n      <li>");
+  stack1 = helpers._triageMustache.call(depth0, "interestText", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n      <li>");
+  stack1 = helpers._triageMustache.call(depth0, "aversionText", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n      <img class='imgswag' ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("swagURL")
+  },hashTypes:{'src': "ID"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" />\n      <ul>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "description", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "retailer", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "location", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n        <li class='data'>");
+  stack1 = helpers._triageMustache.call(depth0, "price", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n      </ul>\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<form class=friends-profile>\n  <ul>\n    <li><label>Birthday:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "birthday", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    <li><label>Anniversary:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "anniversary", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n  </ul>\n\n  <ul>\n  ");
+  stack1 = helpers.each.call(depth0, "interests", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </ul>\n\n  <ul>\n    ");
+  stack1 = helpers.each.call(depth0, "aversions", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </ul>\n\n  <ul>\n    <li><label>Hat Size:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "hatSize", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    <li><label>Shirt Size:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "shirtSize", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    <li><label>Pant Size:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "pantSize", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n    <li><label>Shoe Size:</label>");
+  stack1 = helpers._triageMustache.call(depth0, "shoeSize", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</li>\n  </ul>\n</form>\n\n\n\n<form class='swagbag'>\n  <h2>");
+  stack1 = helpers._triageMustache.call(depth0, "username", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("'s Swag</h2>\n\n  <div class='item'>\n    ");
+  stack1 = helpers.each.call(depth0, "swagbag", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </div>\n\n</form>\n");
+  return buffer;
+  
+});

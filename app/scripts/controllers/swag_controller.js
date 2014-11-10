@@ -31,6 +31,7 @@
 
         this.get('currentUser.swagbag').addObject(swag);
         this.get('currentUser').save();
+
       },
     }
   });
