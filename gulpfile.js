@@ -6,6 +6,7 @@ var gulp = require('gulp');
 // load plugins
 var $ = require('gulp-load-plugins')();
 var prompt = require('gulp-prompt');
+var exec = require('gulp-exec');
 
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
