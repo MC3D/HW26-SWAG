@@ -9,5 +9,5 @@
       this.$('.anniversary').pickadate();
     }
   });
-  
+
 })();

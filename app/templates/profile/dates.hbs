@@ -3,9 +3,10 @@
   {{link-to 'Back' 'profile.avatar'}}
   {{link-to 'Next' 'profile.interests'}}
   <label>Birthday</label>
-  {{input type='date' class='create-user-input birthday' value=currentUser.birthday placeholder='birthday'}}
+  {{input type='text' class='create-user-input birthday' value=currentUser.birthday placeholder='birthday'}}
   <label>Anniversary</label>
-  {{input type='date' class='create-user-input anniversary' value=currentUser.anniversary placeholder='anniversary'}}
+  {{input type='text' class='create-user-input anniversary' value=currentUser.anniversary placeholder='anniversary'}}
 
   <button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
 </form>
+{{log currentUser.birthday}}
