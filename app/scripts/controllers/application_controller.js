@@ -10,9 +10,10 @@
     actions: {
       logOut: function() {
         this.transitionToRoute('index');
+        //Application.reset();
+        //console.log(localStorage.removeItem('currentUser'));
 
 
-        
 
         window.localStorage.clear();
         location.reload();
@@ -23,8 +24,8 @@
         this.transitionToRoute('swag');
       },
 
-      goToSwagroom: function() {
-        this.transitionToRoute('swagroom');
+      goToFriends: function() {
+        this.transitionToRoute('friends');
       },
 
       goToProfile: function() {

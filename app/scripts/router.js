@@ -27,14 +27,30 @@
       path: '/myswag'
     });
 
-    this.resource('swagroom', {
-      path: '/swagroom'
+    this.resource('friends', {
+      path: '/friends'
+    }, function() {
+      this.route('show', {
+        path: ':user_id'
+      });
     });
 
     this.route('welcome', {
       path: '/welcome'
     });
 
+  });
+
+  Application.FriendsIndexRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var currentUser = this.controllerFor('application').get('currentUser');
+      return currentUser.get('friends');
+    }
+  });
+
+  Application.FriendsShowRoute = Ember.Route.extend(Application.VerifyUser, {
+    
   });
 
   Application.IndexRoute = Ember.Route.extend({
@@ -103,11 +119,4 @@
 
   });
 
-  Application.SwagroomRoute = Ember.Route.extend(Application.VerifyUser, {
-
-    model: function() {
-      var currentUser = this.controllerFor('application').get('currentUser');
-      return currentUser.get('friends');
-    }
-  });
 })();

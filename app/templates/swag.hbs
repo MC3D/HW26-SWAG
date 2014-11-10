@@ -17,7 +17,7 @@
 <form class='swagbag'>
   <h2>Current Swag Bag</h2>
   <div class='item'>
-    {{#each currentUser.swagbag itemController='item'}}
+    {{#each currentUser.swagbag itemController='SwagItem'}}
       <img class='imgswag' {{bind-attr src=swagURL}} />
       <ul>
         <li class='data'>{{description}}</li>
