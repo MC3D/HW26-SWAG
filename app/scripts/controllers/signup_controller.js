@@ -21,7 +21,7 @@
               });
               user.save().then(function() {
                 console.log('User created successfully');
-                that.transitionToRoute('welcome');
+                that.transitionToRoute('profile.avatar');
               });
             });
           } else {

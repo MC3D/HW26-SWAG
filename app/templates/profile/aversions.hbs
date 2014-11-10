@@ -1,3 +1,4 @@
+<label>Add Aversion</label>
 {{input type='string' class='create-user-input' value=aversionText placeholder='aversion'}}
 <button class='btn btn-info'{{action 'addAversion'}}>Add</button>
 {{#each currentUser.aversions itemController='aversion'}}
@@ -5,7 +6,3 @@
     <button class='btn btn-danger'{{action 'removeAversion'}}>X</button>
   </li>
 {{/each}}
-
-{{link-to 'interests' 'profile.interests'}}
-{{link-to 'sizes' 'profile.sizes'}}
-{{link-to 'swag' 'swag'}}

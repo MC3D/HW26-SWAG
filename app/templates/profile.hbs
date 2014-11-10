@@ -1,3 +1,9 @@
-<form>
-  {{outlet}}
+<form class='profile'>
+  {{link-to 'Profile Picture' 'profile.avatar'}}
+  {{link-to 'Important Dates' 'profile.dates'}}
+  {{link-to 'Interests' 'profile.interests'}}
+  {{link-to 'Aversions' 'profile.aversions'}}
+  {{link-to 'Just My Size' 'profile.sizes'}}
 </form>
+
+{{outlet}}

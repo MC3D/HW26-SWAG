@@ -1,9 +1,12 @@
-{{input type='string' class='create-user-input' value=currentUser.hatSize placeholder='hat size'}}
-{{input type='string' class='create-user-input' value=currentUser.shirtSize placeholder='shirt size'}}
-{{input type='string' class='create-user-input' value=currentUser.pantSize placeholder='pant size'}}
-{{input type='string' class='create-user-input' value=currentUser.shoeSize placeholder='shoe size'}}
+<form class='addsizes'>
+  <label>Hat Size</label>
+  {{input type='string' class='create-user-input' value=currentUser.hatSize placeholder='hat size'}}
+  <label>Shirt Size</label>
+  {{input type='string' class='create-user-input' value=currentUser.shirtSize placeholder='shirt size'}}
+  <label>Pant Size</label>
+  {{input type='string' class='create-user-input' value=currentUser.pantSize placeholder='pant size'}}
+  <label>Shoe Size</label>
+  {{input type='string' class='create-user-input' value=currentUser.shoeSize placeholder='shoe size'}}
 
-<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
-
-{{link-to 'aversions' 'profile.aversions'}}
-{{link-to 'swag' 'swag'}}
+  <button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
+</form>

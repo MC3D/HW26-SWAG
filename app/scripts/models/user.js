@@ -25,9 +25,7 @@
 
     swagbag: DS.hasMany('swag', {async: true}),
 
-    // following: DS.hasMany('follows', {inverse:'followedBy'},{async: true}),
-    // followedBy: DS.hasMany('followers', {async: true})
-
+    friends: DS.hasMany('user', {async: true}),
   });
 
 })();

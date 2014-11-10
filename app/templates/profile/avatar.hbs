@@ -1,10 +1,12 @@
-<h1>Avatar Upload</h1>
+<form class='addavatar'>
+  <h1>Profile Picture</h1>
 
-{{#if currentUser.imgURL}}
-  <img class='imgAvatar' {{bind-attr src=currentUser.imgURL}} />
-  <button {{action 'addAvatar'}}><i></i>Change Photo</button>
-{{else}}
-  <button {{action 'addAvatar'}}><i></i>Add Photo</button>
-{{/if}}
+  {{#if currentUser.imgURL}}
+    <img class='imgavatar' {{bind-attr src=currentUser.imgURL}} />
+    <button class='btn btn-warning' {{action 'addAvatar'}}><i></i>Change Photo</button>
+  {{else}}
+    <button class='btn btn-warning' {{action 'addAvatar'}}><i></i>Add Photo</button>
+  {{/if}}
 
-<button class='btn btn-info'{{action 'updateProfile'}}>Update</button>
+  <button class='btn btn-info' {{action 'updateProfile'}}>Update</button>
+</form>

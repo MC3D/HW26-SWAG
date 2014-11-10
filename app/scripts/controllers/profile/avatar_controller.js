@@ -19,6 +19,7 @@
 
        updateProfile: function() {
          this.get('currentUser').save();
+         window.alert('Profile Picture Saved');
        }
     }
   });

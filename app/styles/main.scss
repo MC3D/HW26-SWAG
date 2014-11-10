@@ -1,17 +1,415 @@
  // Bourbon & Neat
 @import '../bower_components/bourbon/dist/bourbon';
 @import '../bower_components/neat/app/assets/stylesheets/neat';
+$grid-columns: 12;
 
 // Custom Styles
 
-.imgAvatar {
-  background-color: #808080;
-  height: 150px;
-  width: 150px;
+// BODY
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.imgSwag {
-  background-color: #808080;
-  height: 150px;
-  width: 150px;
+html {
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  font-family: Arial,Helvetica,sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/////////////////////////////////////////// APPLICATION TEMPLATE ///////////////////////////////////////////
+
+.header {
+  background-color: #000;
+  color: #bfbfbf;
+  padding: 10px;
+  text-align: right;
+  text-transform: uppercase;
+  @include span-columns(12);
+
+  .octicon {
+    color: #bfbfbf;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .octicon:hover {
+    .navigation {
+      color: #08c;
+    }
+  }
+
+  .navigation {
+    font-size: 12px;
+    font-weight: 800;
+    padding-right: 5px;
+  }
+
+  .navigation:hover {
+    color: #08c;
+  }
+}
+
+/////////////////////////////////////////// INDEX TEMPLATE ///////////////////////////////////////////
+
+.index {
+  background-color: #000;
+  margin: 0;
+  @include span-columns(12);
+
+  .brand {
+    background-color: #edeef0;
+    height: 100%;
+    padding: 15px 0;
+    text-align: -webkit-center;
+
+
+    h1 {
+      font-size: 45px;
+      margin: 0 0 10px;
+    }
+
+    .tagline {
+      font-size: 20px;
+      margin: 0;
+    }
+  }
+
+  .container {
+    background: url('../../images/galapagos.jpg') no-repeat center center;
+    background-size: 100%;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
+    @include span-columns(12);
+
+    h2 {
+      color: #000;
+      font-size: 20px;
+    }
+
+    span {
+      font-weight: 100;
+    }
+  }
+
+  .login {
+    background-color: #edeef0;
+    margin-bottom: 20px;
+    padding: 10px 10px 0;
+    text-align: left;
+    width: 300px;
+    @include shift(7.2);
+
+  }
+
+  .signup {
+    background-color: #edeef0;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: left;
+    width: 300px;
+    @include shift(7.2);
+  }
+
+  .input {
+    display: block;
+    height: 30px;
+    width: 99%;
+  }
+
+  .password {
+    display: inline-block;
+    margin-right: 5px;
+    width: 66%;
+  }
+
+  .btn-success {
+    vertical-align: top;
+    width: 30%;
+  }
+
+  .btn-info {
+    width: 62%;
+  }
+
+}
+
+////////////////////////////////////////// PROFILE TEMPLATE //////////////////////////////////////////
+
+.profile {
+  background-color: #edeef0;
+  padding: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  @include span-columns(12);
+
+  a {
+    color: #000;
+    font-weight: 400;
+    margin: 0 25px;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #08c;
+  }
+}
+
+/////////////////////////////////////////// AVATAR TEMPLATE ///////////////////////////////////////////
+
+.addavatar {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  .imgavatar {
+    background-color: #808080;
+    display: block;
+    height: 200px;
+    margin: 0 auto 20px;
+    width: 200px;
+  }
+
+
+}
+
+/////////////////////////////////////////// DATES TEMPLATE ///////////////////////////////////////////
+
+.adddates {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  input {
+    display: block;
+    height: 30px;
+    margin: 0 auto 20px;
+  }
+}
+
+//////////////////////////////////////// INTERESTS TEMPLATE ////////////////////////////////////////
+
+.addinterests {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  input {
+    display: block;
+    height: 30px;
+    margin: 0 auto 20px;
+  }
+}
+
+.interests {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  li {
+    font-size: 25px;
+    list-style: none;
+  }
+
+  a {
+    font-size: 12px;
+    margin-right: 20px;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+
+//////////////////////////////////////// SIZES TEMPLATE ////////////////////////////////////////
+
+.addsizes {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  input {
+    display: block;
+    height: 30px;
+    margin: 0 auto 20px;
+    text-align: center;
+  }
+}
+
+/////////////////////////////////////////// SWAG TEMPLATE ///////////////////////////////////////////
+
+.addswag {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 0 20px;
+  @include shift(1.35);
+  @include span-columns(9.3);
+
+  .image {
+    background: url('../../images/carticon.png') no-repeat center center;
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    text-align: right;
+    width: 200px;
+  }
+
+  .imgswag {
+    border: solid 2px #808080;
+    display: block;
+    height: 200px;
+    width: 200px;
+  }
+
+  .data {
+    bottom: 30px;
+    display: inline-block;
+    position: relative;
+  }
+
+  .input {
+    display: block;
+    height: 33px;
+    width: 300px;
+  }
+
+  .description {
+    margin-top: 20px;
+  }
+}
+
+.swagbag {
+
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 0 20px;
+  @include shift(1.35);
+  @include span-columns(9.3);
+
+  .item {
+    display: inline-block;
+  }
+
+  .imgswag {
+    border: solid;
+    height: 200px;
+    margin-bottom: 42px;
+    width: 200px;
+  }
+
+  ul {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0 10px;
+    width: 300px;
+  }
+
+  li {
+    font-size: 17px;
+    padding: 0 5px 1px;
+  }
+
+  .data {
+    line-height: 24px;
+  }
+
+  .btn {
+    margin-bottom: 20px;
+  }
+
+}
+
+
+/////////////////////////////////////////// SWAGROOM TEMPLATE ////////////////////////////////////////////////
+
+.friends {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(2);
+  @include span-columns(8);
+
+  ul {
+    display: inline-block;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  img {
+    display: block;
+    height: 200px;
+    width: 200px;
+  }
+}
+
+/////////////////////////////////////////// SEARCH TEMPLATE ////////////////////////////////////////////////
+
+.search {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(2);
+  @include span-columns(8);
+
+  ul {
+    display: inline-block;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  img {
+    display: block;
+    height: 200px;
+    width: 200px;
+  }
+}
+
+/////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////

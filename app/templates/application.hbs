@@ -1,9 +1,21 @@
 <div class='header'>
-  <h1>SWAG</h1>
-  <h2 class='tagline'>Your style. A perfect fit.</h2>
-  <a href=# class="octicon octicon-gist-secret"></a>
-  <a href=# class="octicon octicon-organization"></a>
-  <a href=# class='octicon octicon-gear'></a>
-  <a href=# class="octicon octicon-sign-out"></a>
-  {{outlet}}
+  <a href=# class="octicon octicon-gist-secret" {{action 'goToSwag'}}>
+    <span class='navigation'>MY SWAG</span>
+  </a>
+
+  <a href=# class="octicon octicon-organization" {{action 'goToSwagroom'}}>
+    <span class='navigation'>SWAG ROOM</span>
+  </a>
+
+  <a href=# class='octicon octicon-gear' {{action 'goToProfile'}}>
+    <span class='navigation'>SETTINGS</span>
+  </a>
+
+  <a href=# class="octicon octicon-sign-out" {{action 'logOut'}}>
+    <span class='navigation'>SIGN OUT</span>
+  </a>
+</div>
+
+<div>
+    {{outlet}}
 </div>

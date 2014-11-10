@@ -27,7 +27,7 @@
       path: '/myswag'
     });
 
-    this.route('swagroom', {
+    this.resource('swagroom', {
       path: '/swagroom'
     });
 
@@ -56,40 +56,58 @@
     }
   });
 
-  Application.ProfileRoute = Ember.Route.extend({
+  Application.ProfileAvatarRoute = Ember.Route.extend(Application.VerifyUser, {
 
-    renderTemplate: function() {
-      this.render('profile');
+  });
 
-      this.render('profile/dates', {
-        into: 'profile',
-        outlet: 'dates',
+
+  Application.ProfileAversionsRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
+
+  Application.ProfileInterestsRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var id = this.controllerFor('application').get('currentUser').id;
+      return this.store.find('user', id);
+    }
+  });
+
+  Application.ProfileSizesRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
+  Application.SearchRoute = Ember.Route.extend(Application.VerifyUser, {
+
+    model: function() {
+      var currentUser = this.controllerFor('application').get('currentUser');
+
+      return Ember.RSVP.hash({
+        friends: currentUser.get('friends.content.content'),
+        users: this.store.find('user')
+      }).then(function(hash) {
+        var friends = hash.friends;
+        var notFriends = hash.users;
+        notFriends.removeObject(currentUser);
+        notFriends.removeObjects(friends);
+        return notFriends;
       });
-
     }
   });
 
-  Application.ProfileAversionsRoute = Ember.Route.extend({
+  Application.SwagRoute = Ember.Route.extend(Application.VerifyUser, {
 
-    model: function(){
-      var id = this.controllerFor('application').get('currentUser').id;
-      return this.store.find('user', id);
-    }
   });
 
-  Application.ProfileInterestsRoute = Ember.Route.extend({
+  Application.SwagroomRoute = Ember.Route.extend(Application.VerifyUser, {
 
-    model: function(){
-      var id = this.controllerFor('application').get('currentUser').id;
-      return this.store.find('user', id);
+    model: function() {
+      var currentUser = this.controllerFor('application').get('currentUser');
+      return currentUser.get('friends');
     }
-  });
-
-  Application.SearchRoute = Ember.Route.extend({
-
-    model: function(){
-      return this.store.find('user');
-    }
-
   });
 })();
