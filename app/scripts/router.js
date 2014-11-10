@@ -50,7 +50,7 @@
   });
 
   Application.FriendsShowRoute = Ember.Route.extend(Application.VerifyUser, {
-    
+
   });
 
   Application.IndexRoute = Ember.Route.extend({
@@ -72,6 +72,10 @@
     }
   });
 
+  Application.ProfileRoute = Ember.Route.extend(Application.VerifyUser, {
+
+  });
+
   Application.ProfileAvatarRoute = Ember.Route.extend(Application.VerifyUser, {
 
   });
@@ -83,6 +87,10 @@
       var id = this.controllerFor('application').get('currentUser').id;
       return this.store.find('user', id);
     }
+  });
+
+  Application.ProfileDatesRoute = Ember.Route.extend(Application.VerifyUser, {
+
   });
 
   Application.ProfileInterestsRoute = Ember.Route.extend(Application.VerifyUser, {

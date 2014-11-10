@@ -1,5 +1,7 @@
 <form class='addinterests'>
   <label>Add Interest</label>
+  {{link-to 'Back' 'profile.dates'}}
+  {{link-to 'Next' 'profile.aversions'}}
   {{input type='string' class='create-user-input' value=interestText placeholder='interest'}}
   <button class='btn btn-info'{{action 'addInterest'}}>Add Interest</button>
 </form>

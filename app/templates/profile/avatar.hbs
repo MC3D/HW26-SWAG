@@ -1,5 +1,6 @@
 <form class='addavatar'>
   <h1>Profile Picture</h1>
+  {{link-to 'Next' 'profile.dates'}}
 
   {{#if currentUser.imgURL}}
     <img class='imgavatar' {{bind-attr src=currentUser.imgURL}} />

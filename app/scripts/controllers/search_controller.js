@@ -3,7 +3,13 @@
 (function() {
   'use strict';
 
-  Application.SearchController = Ember.ObjectController.extend({
+  Application.SearchController = Ember.ArrayController.extend({
+    sortProperties: ['username'],
+    sortAscending: true,
+
+  });
+
+  Application.SearchItemController = Ember.ObjectController.extend({
     needs: ['application'],
     currentUser: Ember.computed.alias('controllers.application.currentUser'),
 

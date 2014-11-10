@@ -1,5 +1,7 @@
 <form class='adddates'>
   <h2>Important Dates</h2>
+  {{link-to 'Back' 'profile.avatar'}}
+  {{link-to 'Next' 'profile.interests'}}
   <label>Birthday</label>
   {{input type='date' class='create-user-input birthday' value=currentUser.birthday placeholder='birthday'}}
   <label>Anniversary</label>

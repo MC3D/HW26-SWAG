@@ -10,6 +10,7 @@
     actions: {
       updateProfile: function() {
         this.get('currentUser').save();
+        window.alert('Sizes Saved');
       }
     }
   });

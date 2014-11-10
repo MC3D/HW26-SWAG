@@ -1,4 +1,8 @@
+{{link-to 'Back' 'profile.interests'}}
+{{link-to 'Next' 'profile.sizes'}}
+
 <label>Add Aversion</label>
+
 {{input type='string' class='create-user-input' value=aversionText placeholder='aversion'}}
 <button class='btn btn-info'{{action 'addAversion'}}>Add</button>
 {{#each currentUser.aversions itemController='aversion'}}

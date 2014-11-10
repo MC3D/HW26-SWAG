@@ -9,6 +9,7 @@
 
     actions: {
       logOut: function() {
+        //this.transitionToRoute('index');
         localStorage.removeItem('firebasetoken');
         Application.reset();
         var dataRef = Application.ref;
