@@ -6,8 +6,8 @@
           <img class='imgAvatar' {{bind-attr src=imgURL}} />
           <div class='info'>
             <span>{{username}}</span>
-            <a class='icon flaticon flaticon-add70 changeFriendStatus'{{action 'addFriend'}}></a>
-            <a class='icon octicon octicon-trashcan changeFriendStatus hidden'{{action 'removeFriend'}}></a>
+            <button class='flaticon flaticon-add70' {{bind-attr disabled=disabled }} {{action 'addFriend'}}></button>
+            <!--<button class='icon octicon octicon-trashcan' {{bind-attr disabled=disabled }} {{action 'removeFriend'}}></button>-->
           </div>
         </li>
     </ul>

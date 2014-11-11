@@ -12,6 +12,7 @@
   Application.SearchItemController = Ember.ObjectController.extend({
     needs: ['application'],
     currentUser: Ember.computed.alias('controllers.application.currentUser'),
+    disabled: false,
 
     actions: {
       addFriend: function() {
@@ -23,8 +24,7 @@
         user.get('friends').addObject(this.get('currentUser'));
         user.save();
 
-        // this.$('.changeFriendStatus').toggleClass('hidden');
-
+        this.set('disabled',true);
 
       },
 
@@ -37,7 +37,8 @@
         user.get('friends').removeObject(this.get('currentUser'));
         user.save();
 
-        // this.$('.changeFriendStatus').toggleClass('hidden');
+        this.set('disabled',true);
+
       }
     }
   });

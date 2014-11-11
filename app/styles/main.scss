@@ -23,9 +23,9 @@ body {
   padding: 0;
 }
 
-.hidden {
+/* .hidden {
   visibility: hidden;
-}
+} */
 
 /////////////////////////////////////////// APPLICATION TEMPLATE ///////////////////////////////////////////
 
@@ -415,6 +415,7 @@ body {
 
     .octicon:hover {
       color: #08c;
+      cursor: pointer;
     }
   }
 
@@ -422,6 +423,53 @@ body {
 
 
 }
+
+/////////////////////////////////////////// FRIEND SHOW TEMPLATE ///////////////////////////////////////////
+
+
+.friends-swagbag {
+  background-color: #edeef0;
+  border: solid;
+  display: inline-block;
+  margin-top: 20px;
+  min-width: 570px;
+  padding: 0 20px 20px;
+  @include span-columns(5);
+
+  .image {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+  }
+
+  .imgswag {
+    border: solid 2px #808080;
+    height: 200px;
+    width: 200px;
+  }
+
+  ul {
+    bottom: 8px;
+    display: inline-block;
+    list-style-type: none;
+    margin: 0 10px;
+    position: relative;
+    vertical-align: top;
+  }
+
+  li {
+    font-size: 17px;
+    line-height: 33px;
+    padding: 0 5px 1px;
+  }
+
+  .btn {
+    margin-bottom: 20px;
+  }
+
+}
+
+
 
 /////////////////////////////////////////// SEARCH TEMPLATE ////////////////////////////////////////////////
 
@@ -461,17 +509,22 @@ body {
       font-weight: 700;
     }
 
-    .icon {
+    .flaticon {
       color: #000;
     }
 
-    .icon:hover {
+    .flaticon:hover {
       color: #08c;
+      cursor: pointer;
     }
 
     .flaticon:before {
       font-size: 14px;
       margin-left: 5px;
+    }
+
+    [disabled] {
+      visibility: hidden;
     }
   }
 }

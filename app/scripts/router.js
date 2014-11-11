@@ -35,10 +35,6 @@
       });
     });
 
-    this.route('welcome', {
-      path: '/welcome'
-    });
-
   });
 
   Application.FriendsIndexRoute = Ember.Route.extend(Application.VerifyUser, {

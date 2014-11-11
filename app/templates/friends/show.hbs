@@ -1,44 +1,59 @@
 <form class=friends-profile>
-  <ul>
-    <li><label>Birthday:</label>{{birthday}}</li>
-    <li><label>Anniversary:</label>{{anniversary}}</li>
-  </ul>
 
-  <ul>
-  {{#each this.interests}}
-      <li>{{interestText}}</li>
-    {{/each}}
-  </ul>
-
-  <ul>
-    {{#each this.aversions}}
-      <li>{{aversionText}}</li>
-    {{/each}}
-  </ul>
-
-  <ul>
-    <li><label>Hat Size:</label>{{hatSize}}</li>
-    <li><label>Shirt Size:</label>{{shirtSize}}</li>
-    <li><label>Pant Size:</label>{{pantSize}}</li>
-    <li><label>Shoe Size:</label>{{shoeSize}}</li>
-  </ul>
-</form>
-
-
-
-<form class='swagbag'>
-  <h2>{{username}}'s Swag</h2>
-
-  <div class='item'>
-    {{#each this.swagbag}}
-      <img class='imgswag' {{bind-attr src=swagURL}} />
-      <ul>
-        <li class='data'>{{description}}</li>
-        <li class='data'>{{retailer}}</li>
-        <li class='data'>{{location}}</li>
-        <li class='data'>{{price}}</li>
+  <section class='hidden'>
+    <p class='level-one'><a {{action 'toggle'}}>IMPORTANT DATES</a></p>
+      <ul class='level-two'>
+        <li><label>Birthday:</label>{{content.birthday}}</li>
+        <li><label>Anniversary:</label>{{content.anniversary}}</li>
       </ul>
-    {{/each}}
-  </div>
+  </section>
+
+  <section class='hidden'>
+    <p class='level-one'><a {{action 'toggle'}}>SIZES</a></p>
+      <ul class='level-two'>
+        <li><label>Hat Size:</label>{{content.hatSize}}</li>
+        <li><label>Shirt Size:</label>{{content.shirtSize}}</li>
+        <li><label>Pant Size:</label>{{content.pantSize}}</li>
+        <li><label>Shoe Size:</label>{{content.shoeSize}}</li>
+      </ul>
+  </section>
+
+  <section class='hidden'>
+    <p class='level-one'><a {{action 'toggle'}}>INTERESTS</a></p>
+      <ul class='level-two'>
+      {{#each this.content.interests}}
+          <li>{{interestText}}</li>
+        {{/each}}
+      </ul>
+  </section>
+
+  <section class='hidden'>
+    <p class='level-one'><a {{action 'toggle'}}>AVERSIONS</a></p>
+      <ul class='level-two'>
+        {{#each this.content.aversions}}
+          <li>{{aversionText}}</li>
+        {{/each}}
+      </ul>
+  </section>
 
 </form>
+
+
+{{#each this.content.swagbag}}
+  <form class='friends-swagbag'>
+
+    <h3>{{description}}</h3>
+    <div class='image'>
+
+        <img class='imgswag' {{bind-attr src=swagURL}} />
+        <ul>
+
+          <li class='data'>{{retailer}}</li>
+          <li class='data'>{{location}}</li>
+          <li class='data'>{{price}}</li>
+
+        </ul>
+
+    </div>
+  </form>
+{{/each}}
