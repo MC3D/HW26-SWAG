@@ -8,21 +8,32 @@
 
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css'>
 
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
     <link rel='stylesheet' href='bower_components/normalize-css/normalize.css' />
-
     <link rel='stylesheet' href='bower_components/pickadate/lib/themes/default.css' />
     <link rel='stylesheet' href='bower_components/pickadate/lib/themes/default.date.css' />
     <link rel='stylesheet' href='bower_components/pickadate/lib/themes/default.time.css' />
-
-    <link rel='stylesheet' href='styles/main.css'>
     <link rel='stylesheet' href='bower_components/octicons/octicons/octicons.css'>
+    <link rel='stylesheet' type='text/css' href='bower_components/flaticon/flaticon.css'>
+    <!-- endbower -->
+    <!-- endbuild -->
 
+    <!-- build:js scripts/modernizr.js -->
+    <!-- bower:js -->
     <script src='bower_components/modernizr/modernizr.js'></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+    <link rel='stylesheet' href='styles/main.css'>
+    <!-- endbuild -->
+
   </head>
 
   <body>
 
-    <!-- build:js scripts/vendor.js -->
+    <!-- build:js js/vendor.js -->
     <!-- bower:js -->
     <script src='bower_components/jquery/dist/jquery.js'></script>
     <script src='bower_components/handlebars/handlebars.js'></script>
@@ -35,11 +46,10 @@
     <script src='bower_components/pickadate/lib/picker.date.js'></script>
     <script src='bower_components/pickadate/lib/picker.time.js'></script>
     <script src="bower_components/filepicker/filepicker.min.js"></script>
-
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:js scripts/application.js -->
+    <!-- build:js js/main.js -->
     <script src='scripts/application.js'></script>
     <script src='scripts/mixins.js'></script>
     <script src='scripts/router.js'></script>
@@ -67,7 +77,9 @@
     <script src='scripts/models/interest.js'></script>
     <script src='scripts/models/user.js'></script>
     <script src='scripts/models/swag.js'></script>
+    <!-- endbuild -->
 
+    <!-- build:js js/templates.js -->
     <script src='templates/application.js'></script>
     <script src='templates/index.js'></script>
     <script src='templates/login.js'></script>
@@ -85,7 +97,6 @@
 
     <script src='templates/friends/index.js'></script>
     <script src='templates/friends/show.js'></script>
-
     <!-- endbuild -->
   </body>
 </html>

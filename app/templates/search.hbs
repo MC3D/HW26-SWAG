@@ -1,18 +1,15 @@
 <form class='search'>
-  <h2>Find Friends</h2>
 
   {{#each arrangedContent itemController='SearchItem'}}
     <ul>
         <li>
-          <p>{{username}}</p>
           <img class='imgAvatar' {{bind-attr src=imgURL}} />
-          <button class='btn btn-info'{{action 'addFriend'}}>Add Friend</button>
+          <div class='info'>
+            <span>{{username}}</span>
+            <a class='icon flaticon flaticon-add70 changeFriendStatus'{{action 'addFriend'}}></a>
+            <a class='icon octicon octicon-trashcan changeFriendStatus hidden'{{action 'removeFriend'}}></a>
+          </div>
         </li>
     </ul>
   {{/each}}
-</form>
-
-<form class='filter'>
-  Name
-  Email
 </form>

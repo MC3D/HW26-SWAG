@@ -22,6 +22,22 @@
 
         user.get('friends').addObject(this.get('currentUser'));
         user.save();
+
+        // this.$('.changeFriendStatus').toggleClass('hidden');
+
+
+      },
+
+      removeFriend: function() {
+        var user = this.get('model');
+
+        this.get('currentUser').get('friends').removeObject(user);
+        this.get('currentUser').save();
+
+        user.get('friends').removeObject(this.get('currentUser'));
+        user.save();
+
+        // this.$('.changeFriendStatus').toggleClass('hidden');
       }
     }
   });

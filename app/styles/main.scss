@@ -23,6 +23,10 @@ body {
   padding: 0;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 /////////////////////////////////////////// APPLICATION TEMPLATE ///////////////////////////////////////////
 
 .header {
@@ -35,7 +39,7 @@ body {
 
   .octicon {
     color: #bfbfbf;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 800;
     text-decoration: none;
   }
@@ -47,7 +51,7 @@ body {
   }
 
   .navigation {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 800;
     padding-right: 5px;
   }
@@ -64,7 +68,7 @@ body {
   margin: 0;
   @include span-columns(12);
 
-  .brand {
+  .banner {
     background-color: #edeef0;
     height: 100%;
     padding: 15px 0;
@@ -272,21 +276,28 @@ body {
 
 /////////////////////////////////////////// SWAG TEMPLATE ///////////////////////////////////////////
 
+.swag-template {
+  margin-left: 9.2%;
+}
+
 .addswag {
+  background-color: #edeef0;
   border: solid;
-  display: block;
+  display: inline-block;
   margin-top: 20px;
-  min-width: 343px;
-  padding: 0 20px;
-  @include shift(1.35);
-  @include span-columns(9.3);
+  min-width: 570px;
+  padding: 0 20px 20px;
+  @include span-columns(5);
+
+
+
 
   .image {
     background: url('../../images/carticon.png') no-repeat center center;
+    background-color: #fff;
     display: inline-block;
-    margin-bottom: 20px;
     margin-right: 20px;
-    text-align: right;
+    vertical-align: bottom;
     width: 200px;
   }
 
@@ -298,9 +309,7 @@ body {
   }
 
   .data {
-    bottom: 30px;
     display: inline-block;
-    position: relative;
   }
 
   .input {
@@ -308,47 +317,42 @@ body {
     height: 33px;
     width: 300px;
   }
-
-  .description {
-    margin-top: 20px;
-  }
 }
 
 .swagbag {
-
+  background-color: #edeef0;
   border: solid;
-  display: block;
+  display: inline-block;
   margin-top: 20px;
-  min-width: 343px;
-  padding: 0 20px;
-  @include shift(1.35);
-  @include span-columns(9.3);
+  min-width: 570px;
+  padding: 0 20px 20px;
+  @include span-columns(5);
 
-  .item {
+  .image {
     display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
   }
 
   .imgswag {
-    border: solid;
+    border: solid 2px #808080;
     height: 200px;
-    margin-bottom: 42px;
     width: 200px;
   }
 
   ul {
+    bottom: 8px;
     display: inline-block;
     list-style-type: none;
     margin: 0 10px;
-    width: 300px;
+    position: relative;
+    vertical-align: top;
   }
 
   li {
     font-size: 17px;
+    line-height: 33px;
     padding: 0 5px 1px;
-  }
-
-  .data {
-    line-height: 24px;
   }
 
   .btn {
@@ -361,7 +365,6 @@ body {
 /////////////////////////////////////////// SWAGROOM TEMPLATE ////////////////////////////////////////////////
 
 .friends {
-  border: solid;
   display: block;
   margin-top: 20px;
   min-width: 343px;
@@ -370,25 +373,59 @@ body {
   @include shift(2);
   @include span-columns(8);
 
+  .btn-info {
+    display: block;
+    left: 79.3%;
+    margin-bottom: 10px;
+    position: relative;
+    vertical-align: top;
+  }
+
   ul {
     display: inline-block;
   }
 
   li {
+    background-color: #edeef0;
+    border: solid;
     list-style: none;
   }
 
   img {
     display: block;
-    height: 200px;
-    width: 200px;
+    height: 210px;
+    width: 215px;
   }
+
+  .info {
+    float: right;
+    position: relative;
+    top: 4px;
+
+    span {
+      color: #000;
+      font-family: fantasy;
+      font-weight: 700;
+    }
+
+    .octicon {
+      color: #000;
+      margin-right: 5px;
+    }
+
+    .octicon:hover {
+      color: #08c;
+    }
+  }
+
+
+
+
 }
 
 /////////////////////////////////////////// SEARCH TEMPLATE ////////////////////////////////////////////////
 
 .search {
-  border: solid;
   display: block;
   margin-top: 20px;
   min-width: 343px;
@@ -402,13 +439,40 @@ body {
   }
 
   li {
+    background-color: #edeef0;
+    border: solid;
     list-style: none;
   }
 
   img {
     display: block;
-    height: 200px;
-    width: 200px;
+    height: 210px;
+    width: 215px;
+  }
+
+  .info {
+    float: right;
+    position: relative;
+    top: 4px;
+
+    span {
+      color: #000;
+      font-family: fantasy;
+      font-weight: 700;
+    }
+
+    .icon {
+      color: #000;
+    }
+
+    .icon:hover {
+      color: #08c;
+    }
+
+    .flaticon:before {
+      font-size: 14px;
+      margin-left: 5px;
+    }
   }
 }
 

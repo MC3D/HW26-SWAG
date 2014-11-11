@@ -1,15 +1,15 @@
 <form class='friends'>
-  <button {{action 'findFriends'}}><i></i>Find Friends</button>
-
-  <h2>My Friends</h2>
+  <button class='btn btn-info'{{action 'findFriends'}}><i></i>Find Friends</button>
 
   {{#each arrangedContent itemController='FriendsItem'}}
       <ul>
         <li>
-          <p>{{username}}</p>
           <img class='imgAvatar' {{bind-attr src=imgURL}} />
-          {{link-to 'View Swag' 'friends.show' this class='btn'}}
-          <button class='btn btn-warning'{{action 'removeFriend'}}>Remove Friend</button>
+          <div class='info'>
+            <span>{{username}}</span>
+            {{link-to '''friends.show' this class='octicon octicon-eye'}}
+            <a class='octicon octicon-trashcan'{{action 'removeFriend'}}></a>
+          </div>
         </li>
       </ul>
   {{/each}}

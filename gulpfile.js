@@ -6,7 +6,7 @@ var gulp = require('gulp');
 // load plugins
 var $ = require('gulp-load-plugins')();
 var prompt = require('gulp-prompt');
-var exec = require('gulp-exec');
+var exec = require('child_process').exec;
 
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
@@ -77,6 +77,7 @@ gulp.task('extras', function () {
 });
 
 gulp.task('clean', function () {
+    $.cache.clearAll();
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 
