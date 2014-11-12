@@ -1,12 +1,16 @@
-{{link-to 'Back' 'profile.interests'}}
-{{link-to 'Next' 'profile.sizes'}}
+<form class='add-aversions'>
+  <label>Add Aversion</label>
+  {{link-to 'Back' 'profile.interests'}}
+  {{link-to 'Next' 'profile.sizes'}}
+  {{input type='string' class='create-user-input' value=aversionText placeholder='aversion'}}
+  <button class='btn btn-info'{{action 'addAversion'}}>Add Aversion</button>
+</form>
 
-<label>Add Aversion</label>
-
-{{input type='string' class='create-user-input' value=aversionText placeholder='aversion'}}
-<button class='btn btn-info'{{action 'addAversion'}}>Add</button>
-{{#each currentUser.aversions itemController='aversion'}}
-  <li>{{aversionText}}
-    <button class='btn btn-danger'{{action 'removeAversion'}}>X</button>
+<form class='aversions'>
+  {{#each currentUser.aversions itemController='aversion'}}
+  <li>
+    {{aversionText}}
   </li>
-{{/each}}
+    <button {{action 'removeAversion'}}>Delete Item</button>
+  {{/each}}
+</form>

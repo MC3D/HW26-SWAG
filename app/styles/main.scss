@@ -211,7 +211,7 @@ body {
 
 //////////////////////////////////////// INTERESTS TEMPLATE ////////////////////////////////////////
 
-.addinterests {
+.add-interests {
   border: solid;
   display: block;
   margin-top: 20px;
@@ -253,6 +253,49 @@ body {
   }
 }
 
+//////////////////////////////////////// AVERSIONS TEMPLATE ////////////////////////////////////////
+
+.add-aversions {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  input {
+    display: block;
+    height: 30px;
+    margin: 0 auto 20px;
+  }
+}
+
+.aversions {
+  border: solid;
+  display: block;
+  margin-top: 20px;
+  min-width: 343px;
+  padding: 20px;
+  text-align: center;
+  @include shift(3.5);
+  @include span-columns(5);
+
+  li {
+    font-size: 25px;
+    list-style: none;
+  }
+
+  a {
+    font-size: 12px;
+    margin-right: 20px;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
 
 //////////////////////////////////////// SIZES TEMPLATE ////////////////////////////////////////
 
@@ -362,7 +405,7 @@ body {
 }
 
 
-/////////////////////////////////////////// SWAGROOM TEMPLATE ////////////////////////////////////////////////
+/////////////////////////////////////////// FRIENDS INDEX TEMPLATE ///////////////////////////////////////////
 
 .friends {
   display: block;
@@ -424,7 +467,7 @@ body {
 
 }
 
-/////////////////////////////////////////// FRIEND SHOW TEMPLATE ///////////////////////////////////////////
+/////////////////////////////////////////// FRIENDS SHOW TEMPLATE ///////////////////////////////////////////
 
 
 .friends-swagbag {
