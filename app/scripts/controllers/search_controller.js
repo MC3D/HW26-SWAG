@@ -7,6 +7,13 @@
     sortProperties: ['username'],
     sortAscending: true,
 
+    actions: {
+      viewFriends: function() {
+        this.transitionToRoute('friends');
+      },
+
+    }
+
   });
 
   Application.SearchItemController = Ember.ObjectController.extend({
@@ -24,7 +31,7 @@
         user.get('friends').addObject(this.get('currentUser'));
         user.save();
 
-        this.set('disabled',true);
+        this.set('disabled', true);
 
       },
 
@@ -37,9 +44,13 @@
         user.get('friends').removeObject(this.get('currentUser'));
         user.save();
 
-        this.set('disabled',true);
+        this.set('disabled', true);
 
-      }
+      },
+
+
+
+
     }
   });
 

@@ -18,15 +18,14 @@
 {{#each currentUser.swagbag itemController='SwagItem'}}
   <form class='swagbag'>
 
-    <h3>{{description}}</h3>
     <div class='image'>
 
         <img class='imgswag' {{bind-attr src=swagURL}} />
         <ul>
-
-          <li class='data'>{{retailer}}</li>
-          <li class='data'>{{location}}</li>
-          <li class='data'>{{price}}</li>
+          <li class='description'>{{description}}</li>
+          <li class='retailer'>{{retailer}}</li>
+          <li class='location'>{{location}}</li>
+          <li class='price'>{{price}}</li>
           <li><button class='btn btn-danger'{{action 'removeSwag'}}>REMOVE ITEM</button></li>
         </ul>
 

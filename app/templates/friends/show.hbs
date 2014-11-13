@@ -1,53 +1,39 @@
 <form class=friends-profile>
 
-  <section class='hidden'>
-    <p class='level-one'><a {{action 'toggle'}}>IMPORTANT DATES</a></p>
-      <ul class='level-two'>
-        <li><label>Birthday:</label>{{content.birthday}}</li>
-        <li><label>Anniversary:</label>{{content.anniversary}}</li>
-      </ul>
+  <section class='section hidden'>
+    <p class='level-one'><a class='drop-dates'>IMPORTANT DATES</a></p>
+
   </section>
 
-  <section class='hidden'>
-    <p class='level-one'><a {{action 'toggle'}}>SIZES</a></p>
-      <ul class='level-two'>
-        <li><label>Hat Size:</label>{{content.hatSize}}</li>
-        <li><label>Shirt Size:</label>{{content.shirtSize}}</li>
-        <li><label>Pant Size:</label>{{content.pantSize}}</li>
-        <li><label>Shoe Size:</label>{{content.shoeSize}}</li>
-      </ul>
+  <section class='section'>
+    <p class='level-one'><a class='drop-sizes'>SIZES</a></p>
+
   </section>
 
-  <section class='hidden'>
-    <p class='level-one'><a {{action 'toggle'}}>INTERESTS</a></p>
-      <ul class='level-two'>
-      {{#each this.content.interests}}
-          <li>{{interestText}}</li>
-        {{/each}}
-      </ul>
+  <section class='section'>
+    <p class='level-one'><a class='drop-interests'>INTERESTS</a></p>
+
   </section>
 
-  <section class='hidden'>
-    <p class='level-one'><a {{action 'toggle'}}>AVERSIONS</a></p>
-      <ul class='level-two'>
-        {{#each this.content.aversions}}
-          <li>{{aversionText}}</li>
-        {{/each}}
-      </ul>
-  </section>
+  <section class='section'>
+    <p class='level-one'><a class='drop-aversions'>AVERSIONS</a></p>
+        </section>
 
 </form>
 
+<div class=friends-show-template>
+
+  <h2 class='username'>{{content.username}}'S PREFERRED SWAG</h2>
 
 {{#each this.content.swagbag}}
   <form class='friends-swagbag'>
 
-    <h3>{{description}}</h3>
+
     <div class='image'>
 
         <img class='imgswag' {{bind-attr src=swagURL}} />
         <ul>
-
+          <li>{{description}}</li>
           <li class='data'>{{retailer}}</li>
           <li class='data'>{{location}}</li>
           <li class='data'>{{price}}</li>
@@ -57,3 +43,4 @@
     </div>
   </form>
 {{/each}}
+</div>

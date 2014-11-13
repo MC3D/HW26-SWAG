@@ -32,6 +32,12 @@
         this.get('currentUser.swagbag').addObject(swag);
         this.get('currentUser').save();
 
+        this.set('swagURL','');
+        this.set('description','');
+        this.set('retailer','');
+        this.set('location','');
+        this.set('price','');
+
       },
     }
   });

@@ -16,6 +16,8 @@
          console.log(interest);
         this.get('currentUser').get('interests').addObject(interest);
         this.get('currentUser').save();
+
+        this.set('interestText','');
       },
     }
   });

@@ -1,7 +1,7 @@
 <form class='add-aversions'>
-  <label>Add Aversion</label>
-  {{link-to 'Back' 'profile.interests'}}
-  {{link-to 'Next' 'profile.sizes'}}
+  <h2>Add Aversion</h2>
+  {{link-to 'Back' 'profile.interests' class='back'}}
+  {{link-to 'Next' 'profile.sizes' class='next'}}
   {{input type='string' class='create-user-input' value=aversionText placeholder='aversion'}}
   <button class='btn btn-info'{{action 'addAversion'}}>Add Aversion</button>
 </form>
@@ -10,7 +10,7 @@
   {{#each currentUser.aversions itemController='aversion'}}
   <li>
     {{aversionText}}
+    <button {{action 'removeAversion'}}>X</button>
   </li>
-    <button {{action 'removeAversion'}}>Delete Item</button>
   {{/each}}
 </form>

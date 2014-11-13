@@ -23,10 +23,6 @@ body {
   padding: 0;
 }
 
-/* .hidden {
-  visibility: hidden;
-} */
-
 /////////////////////////////////////////// APPLICATION TEMPLATE ///////////////////////////////////////////
 
 .header {
@@ -35,7 +31,7 @@ body {
   padding: 10px;
   text-align: right;
   text-transform: uppercase;
-  @include span-columns(12);
+  width: 100%;
 
   .octicon {
     color: #bfbfbf;
@@ -170,7 +166,7 @@ body {
 /////////////////////////////////////////// AVATAR TEMPLATE ///////////////////////////////////////////
 
 .addavatar {
-  border: solid;
+  border: solid 2px #808080;
   display: block;
   margin-top: 20px;
   min-width: 343px;
@@ -183,8 +179,15 @@ body {
     background-color: #808080;
     display: block;
     height: 200px;
-    margin: 0 auto 20px;
+    margin: 20px 0 20px 167px;
     width: 200px;
+  }
+
+  .next {
+    bottom: 95px;
+    float: right;
+    position: relative;
+
   }
 
 
@@ -206,6 +209,19 @@ body {
     display: block;
     height: 30px;
     margin: 0 auto 20px;
+    text-align: center;
+  }
+
+  .back {
+    bottom: 77px;
+    float: left;
+    position: relative;
+  }
+
+  .next {
+    bottom: 77px;
+    float: right;
+    position: relative;
   }
 }
 
@@ -225,6 +241,19 @@ body {
     display: block;
     height: 30px;
     margin: 0 auto 20px;
+    text-align: center;
+  }
+
+  .back {
+    bottom: 77px;
+    float: left;
+    position: relative;
+  }
+
+  .next {
+    bottom: 77px;
+    float: right;
+    position: relative;
   }
 }
 
@@ -239,8 +268,10 @@ body {
   @include span-columns(5);
 
   li {
+    display: inline-block;
     font-size: 25px;
     list-style: none;
+    margin-bottom: 20px;
   }
 
   a {
@@ -250,6 +281,12 @@ body {
 
   a:hover {
     text-decoration: none;
+  }
+
+  button {
+    font-size: 12px;
+    margin-right: 15px;
+    vertical-align: bottom;
   }
 }
 
@@ -269,6 +306,19 @@ body {
     display: block;
     height: 30px;
     margin: 0 auto 20px;
+    text-align: center;
+  }
+
+  .back {
+    bottom: 77px;
+    float: left;
+    position: relative;
+  }
+
+  .next {
+    bottom: 77px;
+    float: right;
+    position: relative;
   }
 }
 
@@ -283,8 +333,10 @@ body {
   @include span-columns(5);
 
   li {
+    display: inline-block;
     font-size: 25px;
     list-style: none;
+    margin-bottom: 20px;
   }
 
   a {
@@ -294,6 +346,12 @@ body {
 
   a:hover {
     text-decoration: none;
+  }
+
+  button {
+    font-size: 12px;
+    margin-right: 15px;
+    vertical-align: bottom;
   }
 }
 
@@ -315,6 +373,18 @@ body {
     margin: 0 auto 20px;
     text-align: center;
   }
+
+  .back {
+    bottom: 77px;
+    float: left;
+    position: relative;
+  }
+
+  .next {
+    bottom: 77px;
+    float: right;
+    position: relative;
+  }
 }
 
 /////////////////////////////////////////// SWAG TEMPLATE ///////////////////////////////////////////
@@ -324,16 +394,11 @@ body {
 }
 
 .addswag {
-  background-color: #edeef0;
+  background-color: #f0f8ff;
   border: solid;
-  display: inline-block;
-  margin-top: 20px;
-  min-width: 570px;
+  margin: 20px 400px 20px 0;
   padding: 0 20px 20px;
-  @include span-columns(5);
-
-
-
+  width: 1218px;
 
   .image {
     background: url('../../images/carticon.png') no-repeat center center;
@@ -363,45 +428,46 @@ body {
 }
 
 .swagbag {
-  background-color: #edeef0;
-  border: solid;
   display: inline-block;
-  margin-top: 20px;
-  min-width: 570px;
-  padding: 0 20px 20px;
-  @include span-columns(5);
+  margin: 15px 52px 15px 0;
+
+
+  width: 268px;
 
   .image {
-    display: inline-block;
-    margin-right: 20px;
-    vertical-align: top;
+    margin: 0;
+    width: 260px;
+
   }
 
   .imgswag {
     border: solid 2px #808080;
-    height: 200px;
-    width: 200px;
+    display: block;
+    height: 210px;
+    width: 245px;
   }
 
   ul {
     bottom: 8px;
     display: inline-block;
     list-style-type: none;
-    margin: 0 10px;
+    margin: 0;
+    padding-top: 10px;
     position: relative;
     vertical-align: top;
   }
 
   li {
-    font-size: 17px;
+
+    display: block;
+    font-size: 14px;
     line-height: 33px;
-    padding: 0 5px 1px;
+
   }
 
   .btn {
     margin-bottom: 20px;
   }
-
 }
 
 
@@ -413,12 +479,12 @@ body {
   min-width: 343px;
   padding: 20px;
   text-align: center;
-  @include shift(2);
-  @include span-columns(8);
+  @include shift(1);
+  @include span-columns(10);
 
   .btn-info {
     display: block;
-    left: 79.3%;
+    left: 82.6%;
     margin-bottom: 10px;
     position: relative;
     vertical-align: top;
@@ -426,15 +492,16 @@ body {
 
   ul {
     display: inline-block;
+    margin: 0 50px 30px 0;
   }
 
   li {
     background-color: #edeef0;
-    border: solid;
     list-style: none;
   }
 
   img {
+    border: solid 2px #808080;
     display: block;
     height: 210px;
     width: 215px;
@@ -442,18 +509,21 @@ body {
 
   .info {
     float: right;
+    line-height: 17px;
     position: relative;
+    text-align: right;
     top: 4px;
+    width: 215px;
 
     span {
       color: #000;
-      font-family: fantasy;
+      float: left;
       font-weight: 700;
+      margin-right: 10px;
     }
 
     .octicon {
       color: #000;
-      margin-right: 5px;
     }
 
     .octicon:hover {
@@ -469,41 +539,88 @@ body {
 
 /////////////////////////////////////////// FRIENDS SHOW TEMPLATE ///////////////////////////////////////////
 
+.friends-show-template {
+  margin-left: 9.2%;
+
+  .username {
+    text-transform: uppercase;
+  }
+}
+
+.friends-profile {
+  background-color: #edeef0;
+  color: #000;
+  height: 40px;
+  text-align: center;
+  text-transform: uppercase;
+
+  .section {
+    color: #000;
+    display: inline-block;
+    margin: 10px 25px 0;
+    text-align: left;
+    vertical-align: top;
+
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #08c;
+      cursor: pointer;
+    }
+  }
+
+  .level-two {
+    list-style: none;
+    margin-left: 0;
+  }
+
+  label {
+    color: #08c;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+
+}
 
 .friends-swagbag {
-  background-color: #edeef0;
-  border: solid;
   display: inline-block;
-  margin-top: 20px;
-  min-width: 570px;
-  padding: 0 20px 20px;
-  @include span-columns(5);
+  margin: 15px 52px 15px 0;
+
+
+  width: 268px;
 
   .image {
-    display: inline-block;
-    margin-right: 20px;
-    vertical-align: top;
+    margin: 0;
+    width: 260px;
   }
 
   .imgswag {
     border: solid 2px #808080;
-    height: 200px;
-    width: 200px;
+    display: block;
+    height: 210px;
+    width: 245px;
   }
 
   ul {
     bottom: 8px;
     display: inline-block;
     list-style-type: none;
-    margin: 0 10px;
+    margin: 0;
+    padding-top: 10px;
     position: relative;
     vertical-align: top;
   }
 
   li {
-    font-size: 17px;
+    display: block;
+    font-size: 14px;
     line-height: 33px;
-    padding: 0 5px 1px;
   }
 
   .btn {
@@ -511,8 +628,6 @@ body {
   }
 
 }
-
-
 
 /////////////////////////////////////////// SEARCH TEMPLATE ////////////////////////////////////////////////
 
@@ -522,20 +637,29 @@ body {
   min-width: 343px;
   padding: 20px;
   text-align: center;
-  @include shift(2);
-  @include span-columns(8);
+  @include shift(1);
+  @include span-columns(10);
+
+  .btn-info {
+    display: block;
+    left: 86.9%;
+    margin-bottom: 10px;
+    position: relative;
+    vertical-align: top;
+  }
 
   ul {
     display: inline-block;
+    margin: 0 50px 30px 0;
   }
 
   li {
     background-color: #edeef0;
-    border: solid;
     list-style: none;
   }
 
   img {
+    border: solid 2px #808080;
     display: block;
     height: 210px;
     width: 215px;
@@ -545,15 +669,17 @@ body {
     float: right;
     position: relative;
     top: 4px;
+    width: 215px;
 
     span {
       color: #000;
-      font-family: fantasy;
+      float: left;
       font-weight: 700;
     }
 
     .flaticon {
       color: #000;
+      float: right;
     }
 
     .flaticon:hover {

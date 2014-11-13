@@ -1,7 +1,8 @@
 <form class='addsizes'>
+  <h2>Your Sizes</h2>
 
-{{link-to 'Back' 'profile.aversions'}}
-{{link-to 'Next' 'swag'}}
+{{link-to 'Back' 'profile.aversions' class='back'}}
+{{link-to 'Next' 'swag' class='next'}}
 
   <label>Hat Size</label>
   {{input type='string' class='create-user-input' value=currentUser.hatSize placeholder='hat size'}}

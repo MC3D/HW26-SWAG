@@ -1,7 +1,7 @@
 <form class='add-interests'>
-  <label>Add Interest</label>
-  {{link-to 'Back' 'profile.dates'}}
-  {{link-to 'Next' 'profile.aversions'}}
+  <h2>Add Interest</h2>
+  {{link-to 'Back' 'profile.dates' class='back'}}
+  {{link-to 'Next' 'profile.aversions' class='next'}}
   {{input type='string' class='create-user-input' value=interestText placeholder='interest'}}
   <button class='btn btn-info'{{action 'addInterest'}}>Add Interest</button>
 </form>
@@ -10,7 +10,7 @@
   {{#each currentUser.interests itemController='interest'}}
     <li>
       {{interestText}}
+      <button {{action 'removeInterest'}}>X</button>
     </li>
-    <button {{action 'removeInterest'}}>Delete Item</button>
   {{/each}}
 </form>

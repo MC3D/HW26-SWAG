@@ -33,10 +33,7 @@
             resolve(user);
           },
           function(error) {
-            // The user wasn't found, so I must create it
-            // if (error === null) {
               console.error('Not found', error);
-              /////////////////////////////////////////////////////////////////set username here
               var user = that.store.recordForId('user', authData.uid);
               if(user){
                 user.loadedData();
@@ -58,7 +55,6 @@
             console.log('Login Succeeded!', authData);
           } else {
             reject(error);
-            console.log('Login Failed!', error);
             console.log('Error authenticating user:', error);
           }
         });

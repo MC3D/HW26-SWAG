@@ -16,6 +16,8 @@
 
         this.get('currentUser').get('aversions').addObject(aversion);
         this.get('currentUser').save();
+
+        this.set('aversionText','');
       },
     }
   });
@@ -31,13 +33,6 @@
       var user = this.get('currentUser');
       user.get('aversions').removeObject(this.get('model'));
       user.save();
-
-        // this.get('model').destroyRecord();
-        // console.log(this.get('currentUser'));
-        //
-        // this.get('curentUser').save().catch(function(error){
-        //   console.log(error);
-        // });
 
       }
     }
