@@ -2,6 +2,8 @@
 @import '../bower_components/bourbon/dist/bourbon';
 @import '../bower_components/neat/app/assets/stylesheets/neat';
 $grid-columns: 12;
+$tablet: new-breakpoint(max-width 768px);
+$mobile: new-breakpoint(max-width 480px);
 
 // Custom Styles
 
@@ -28,14 +30,18 @@ body {
 .header {
   background-color: #000;
   color: #bfbfbf;
-  padding: 10px;
+  padding: rem(10px);
   text-align: right;
   text-transform: uppercase;
   width: 100%;
 
+  @include media($mobile) {
+    text-align: center;
+  }
+
   .octicon {
     color: #bfbfbf;
-    font-size: 13px;
+    font-size: rem(13px);
     font-weight: 800;
     text-decoration: none;
   }
@@ -47,13 +53,16 @@ body {
   }
 
   .navigation {
-    font-size: 13px;
+    font-size: rem(13px);
     font-weight: 800;
-    padding-right: 5px;
   }
 
   .navigation:hover {
     color: #08c;
+  }
+
+  .text {
+    padding-right: rem(5px);
   }
 }
 
@@ -61,38 +70,35 @@ body {
 
 .index {
   background-color: #000;
-  margin: 0;
-  @include span-columns(12);
 
   .banner {
     background-color: #edeef0;
     height: 100%;
-    padding: 15px 0;
-    text-align: -webkit-center;
+    padding: rem(8px) 0;
+    text-align: center;
 
 
     h1 {
-      font-size: 45px;
-      margin: 0 0 10px;
+      font-size: rem(45px);
+      margin: 0 0 rem(10px);
     }
 
     .tagline {
-      font-size: 20px;
+      font-size: rem(20px);
       margin: 0;
     }
   }
 
   .container {
     background: url('../../images/galapagos.jpg') no-repeat center center;
-    background-size: 100%;
-    height: 100%;
-    padding: 20px;
+    background-size: cover;
+    padding: rem(60px);
     text-align: center;
-    @include span-columns(12);
+    width: 100%;
 
     h2 {
       color: #000;
-      font-size: 20px;
+      font-size: rem(20px);
     }
 
     span {
@@ -102,32 +108,42 @@ body {
 
   .login {
     background-color: #edeef0;
-    margin-bottom: 20px;
-    padding: 10px 10px 0;
+    border-radius: rem(5px);
+    margin-bottom: rem(5px);
+    padding: rem(10px) rem(10px) 0;
     text-align: left;
-    width: 300px;
+    width: rem(300px);
     @include shift(7.2);
+
+    @include media($mobile) {
+      margin: 0 auto rem(5px);
+    }
 
   }
 
   .signup {
     background-color: #edeef0;
-    margin-bottom: 20px;
-    padding: 10px;
+    border-radius: rem(5px);
+    margin-bottom: rem(20px);
+    padding: rem(10px);
     text-align: left;
-    width: 300px;
+    width: rem(300px);
     @include shift(7.2);
+
+    @include media($mobile) {
+      margin: 0 auto rem(5px);
+    }
   }
 
   .input {
     display: block;
-    height: 30px;
+    height: rem(30px);
     width: 99%;
   }
 
   .password {
     display: inline-block;
-    margin-right: 5px;
+    margin-right: rem(3px);
     width: 66%;
   }
 
