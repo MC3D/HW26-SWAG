@@ -162,40 +162,65 @@ body {
 
 .profile {
   background-color: #edeef0;
-  padding: 10px;
+  padding: rem(10px);
   text-align: center;
   text-transform: uppercase;
-  @include span-columns(12);
 
   a {
     color: #000;
     font-weight: 400;
-    margin: 0 25px;
+    margin: 0 rem(25px);
     text-decoration: none;
+
+    @include media($mobile) {
+      font-size: 63%;
+      margin: 0 rem(4px);
+    }
   }
 
   a:hover {
     color: #08c;
+    font-weight: 600;
   }
+
+
 }
 
 /////////////////////////////////////////// AVATAR TEMPLATE ///////////////////////////////////////////
 
-.addavatar {
-  border: solid 2px #808080;
+.add-avatar {
+  border: solid;
   display: block;
-  margin-top: 20px;
-  min-width: 343px;
-  padding: 20px;
+  margin: 0 auto;
+  min-width: rem(260px);
+  padding: rem(10px);
   text-align: center;
-  @include shift(3.5);
-  @include span-columns(5);
+  width: rem(260px);
 
-  .imgavatar {
-    background-color: #808080;
+  h1 {
+    margin: 0;
+  }
+
+  .img-container {
+    background: url('../../images/add70.png') no-repeat center center;
+    background-size: 60%;
+    border: solid;
+
     display: block;
     height: 200px;
-    margin: 20px 0 20px 167px;
+    margin: 0 auto rem(5px);
+
+    width: 200px;
+  }
+
+  .img-avatar {
+    background-size: 60%;
+
+
+    display: block;
+    height: 200px;
+    margin: 0 auto rem(5px);
+
     width: 200px;
   }
 
@@ -204,6 +229,10 @@ body {
     float: right;
     position: relative;
 
+  }
+
+  .btn {
+    width: 98px;
   }
 
 

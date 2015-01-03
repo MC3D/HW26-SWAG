@@ -20,6 +20,7 @@
        updateProfile: function() {
          this.get('currentUser').save();
          window.alert('Profile Picture Saved');
+         this.transitionToRoute('profile.dates');
        }
     }
   });

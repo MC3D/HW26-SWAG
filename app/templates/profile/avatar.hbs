@@ -1,11 +1,11 @@
-<form class='addavatar'>
+<form class='add-avatar'>
   <h1>Profile Picture</h1>
-  {{link-to 'Next' 'profile.dates' class='next'}}
 
   {{#if currentUser.imgURL}}
-    <img class='imgavatar' {{bind-attr src=currentUser.imgURL}} />
-    <button class='btn btn-warning' {{action 'addAvatar'}}><i></i>Change Photo</button>
+    <img class='img-avatar' {{bind-attr src=currentUser.imgURL}} />
+    <button class='btn btn-warning' {{action 'addAvatar'}}><i></i>Change</button>
   {{else}}
+    <div class='img-container'></div>
     <button class='btn btn-warning' {{action 'addAvatar'}}><i></i>Add Photo</button>
   {{/if}}
 
