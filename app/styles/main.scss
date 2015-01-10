@@ -30,7 +30,7 @@ body {
 .header {
   background-color: #000;
   color: #bfbfbf;
-  padding: rem(10px);
+  padding: rem(10);
   text-align: right;
   text-transform: uppercase;
   width: 100%;
@@ -41,19 +41,21 @@ body {
 
   .octicon {
     color: #bfbfbf;
-    font-size: rem(13px);
+    font-size: rem(13);
     font-weight: 800;
     text-decoration: none;
   }
 
   .octicon:hover {
+    color: #08c;
+
     .navigation {
       color: #08c;
     }
   }
 
   .navigation {
-    font-size: rem(13px);
+    font-size: rem(13);
     font-weight: 800;
   }
 
@@ -62,7 +64,7 @@ body {
   }
 
   .text {
-    padding-right: rem(5px);
+    padding-right: rem(5);
   }
 }
 
@@ -74,17 +76,17 @@ body {
   .banner {
     background-color: #edeef0;
     height: 100%;
-    padding: rem(8px) 0;
+    padding: rem(8) 0;
     text-align: center;
 
 
     h1 {
-      font-size: rem(45px);
-      margin: 0 0 rem(10px);
+      font-size: rem(45);
+      margin: 0 0 rem(10);
     }
 
     .tagline {
-      font-size: rem(20px);
+      font-size: rem(20);
       margin: 0;
     }
   }
@@ -92,13 +94,14 @@ body {
   .container {
     background: url('../../images/galapagos.jpg') no-repeat center center;
     background-size: cover;
-    padding: rem(60px);
+    padding: rem(60);
     text-align: center;
     width: 100%;
 
     h2 {
       color: #000;
-      font-size: rem(20px);
+      font-size: rem(20);
+      margin: 0 rem(1) 0 0;
     }
 
     span {
@@ -108,43 +111,58 @@ body {
 
   .login {
     background-color: #edeef0;
-    border-radius: rem(5px);
-    margin-bottom: rem(5px);
-    padding: rem(10px) rem(10px) rem(4px);
+    border-radius: rem(5);
+    margin-bottom: rem(5);
+    padding: rem(12) rem(10) rem(5);
     text-align: left;
-    width: rem(300px);
+    width: rem(300);
     @include shift(7.2);
 
     @include media($mobile) {
-      margin: 0 auto rem(5px);
+      margin: 0 auto rem(5);
+    }
+
+  }
+
+  .reset {
+    background-color: #edeef0;
+    border-radius: rem(5);
+    margin-bottom: rem(5);
+    padding: rem(12) rem(10) rem(5);
+    text-align: left;
+    width: rem(300);
+    @include shift(7.2);
+
+    @include media($mobile) {
+      margin: 0 auto rem(5);
     }
 
   }
 
   .signup {
     background-color: #edeef0;
-    border-radius: rem(5px);
-    margin-bottom: rem(20px);
-    padding: rem(10px);
+    border-radius: rem(5);
+    margin-bottom: rem(20);
+    padding: rem(10);
     text-align: left;
-    width: rem(300px);
+    width: rem(300);
     @include shift(7.2);
 
     @include media($mobile) {
-      margin: 0 auto rem(5px);
+      margin: 0 auto rem(5);
     }
   }
 
   .input {
     display: block;
-    height: rem(30px);
+    height: rem(30);
     width: 99%;
   }
 
   .password {
     display: inline-block;
-    margin-bottom: rem(3px);
-    margin-right: rem(3px);
+    margin-bottom: rem(3);
+    margin-right: rem(3);
     width: 66%;
   }
 
@@ -159,8 +177,17 @@ body {
 
   .link {
     cursor: pointer;
-    margin-left: rem(2px);
+    margin-left: rem(2);
     text-decoration: none;
+  }
+
+  .email2 {
+    margin-bottom: rem(3);
+  }
+
+  .link2 {
+    float: right;
+    margin-right: rem(5);
   }
 
 }
@@ -510,11 +537,9 @@ body {
   }
 
   li {
-
     display: block;
     font-size: 14px;
     line-height: 33px;
-
   }
 
   .btn {

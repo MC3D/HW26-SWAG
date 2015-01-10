@@ -7,14 +7,14 @@
     needs: ['session'],
 
     actions: {
-      resetPassword: function() {
+      changePassword: function() {
         // var that = this;
         // var credentials = this.getProperties('email', 'password');
 
         Application.ref.changePassword({
-          email: 'enter text',
-          oldPassword: 'enter text',
-          newPassword: 'enter text',
+          email: this.get('email'),
+          oldPassword: this.get(''),
+          newPassword: this.get('password'),
         }, function(error){
           if(error===null){
             console.log('Password changed successfully');
@@ -26,19 +26,9 @@
         //   console.log('there');
         //   that.transitionToRoute('swag');
         // });
-      },
-
-      sendPasswordResetEmail: function() {
-        Application.ref.resetPassword({
-          email: 'email address'
-        }, function(error){
-          if (error===null){
-            console.log('Password reset email sent successfully');
-          } else {
-            console.log('Error sending password reset email:', error);
-          }
-      });
       }
+
+
     }
   });
 })();

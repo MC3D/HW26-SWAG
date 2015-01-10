@@ -9,6 +9,10 @@
       path: '/'
     });
 
+    this.route('password', {
+      path: '/resetpassword'
+    });
+
     this.route('search', {
       path: '/searchpeople'
     });
@@ -60,12 +64,22 @@
         controller: 'login'
       });
 
+      this.render('reset', {
+        into: 'index',
+        outlet: 'reset',
+        controller: 'reset'
+      });
+
       this.render('signup', {
         into: 'index',
         outlet: 'signup',
         controller: 'signup'
       });
     }
+  });
+
+  Application.PasswordRoute = Ember.Route.extend(Application.VerifyUser, {
+
   });
 
   Application.ProfileRoute = Ember.Route.extend(Application.VerifyUser, {
