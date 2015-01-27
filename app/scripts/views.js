@@ -10,6 +10,14 @@
     }
   });
 
+  // Application.LoginView = Ember.View.extend({
+  //   isVisible: true
+  // });
+  // 
+  // Application.SignupView = Ember.View.extend({
+  //   isVisible: true
+  // });
+
   Application.FriendsShowView = Ember.View.extend({
 
     didInsertElement: function() {

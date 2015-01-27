@@ -55,6 +55,12 @@
 
   Application.IndexRoute = Ember.Route.extend({
 
+    beforeModel: function() {
+      if (!Ember.isEmpty(this.controllerFor('session').get('token'))) {
+        this.transitionTo('swag');
+      }
+    },
+
     renderTemplate: function() {
       this.render('index');
 
@@ -62,12 +68,6 @@
         into: 'index',
         outlet: 'login',
         controller: 'login'
-      });
-
-      this.render('reset', {
-        into: 'index',
-        outlet: 'reset',
-        controller: 'reset'
       });
 
       this.render('signup', {

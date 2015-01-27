@@ -7,6 +7,13 @@ $mobile: new-breakpoint(max-width 480px);
 
 // Custom Styles
 
+
+///
+
+.hidden {
+  display: none;
+}
+
 // BODY
 
 * {
@@ -172,7 +179,7 @@ body {
   }
 
   .btn-info {
-    width: 62%;
+    width: 30%;
   }
 
   .link {

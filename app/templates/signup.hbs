@@ -1,6 +1,8 @@
-<h2>New to Swagger?<span> Join today!</span></h2>
-{{input type='text' class='input' value=username placeholder='username'}}
-{{input type='email' class='input' value=email placeholder='email'}}
-{{input type='password' class='input' value=password placeholder='password'}}
-{{input type='password' class='input' value=password2 placeholder='re-enter password'}}
-<input class='btn btn-info' value='Sign up for Swagger' {{action 'signUp'}}>
+<div class='signup'>
+  <h2>New to Swagger?<span> Register today!</span></h2>
+  {{input type='text' class='input' value=username placeholder='username'}}
+  {{input type='email' class='input' value=email placeholder='email'}}
+  {{input type='password' class='input' value=password placeholder='password'}}
+  {{input type='password' class='input' value=password2 placeholder='re-enter password'}}
+  <input class='btn btn-info' value='Register' {{action 'signUp'}}>
+</div>
